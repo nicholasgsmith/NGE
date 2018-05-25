@@ -3,4 +3,6 @@
 
 # But not these files...
 !.gitignore
-!Window.cpp
+!NGE_Window.cpp
+!NGE_Window.h
+!NGE.h
