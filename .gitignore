@@ -9,4 +9,6 @@
 !NGE_Window.h
 !NGE_Maths.cpp
 !NGE_Maths.h
+!NGE_Timing.cpp
+!NGE_Timing.h
 !NGE.h

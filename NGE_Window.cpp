@@ -106,7 +106,7 @@ int NGE_Window::setWindowBorder(bool border)
 int NGE_Window::renderPresent()
 {
 	SDL_GL_SwapWindow(Window);
-	//After rendering, clear the gl buffer to the windows background color
+	//After rendering, clear the gl context to the windows background color
 	glClearColor(backgroundRed / 255.0f, backgroundGreen / 255.0f, backgroundBlue / 255.0f, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	return 0;
