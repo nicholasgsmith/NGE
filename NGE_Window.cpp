@@ -116,7 +116,7 @@ int NGE_Window::getCursorXPosition()
 {
 	int x, y;
 	SDL_GetMouseState(&x, &y);
-	x = x / 1.0 / xResolution*matrixWidth;
+	x = (x*matrixWidth) / xResolution;
 	return x;
 }
 
@@ -124,7 +124,7 @@ int NGE_Window::getCursorYPosition()
 {
 	int x, y;
 	SDL_GetMouseState(&x, &y);
-	y = y / 1.0 / yResolution*matrixHeight;
+	y = (y*matrixHeight) / yResolution;
 	return y;
 }
 

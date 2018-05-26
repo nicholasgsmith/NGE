@@ -97,6 +97,10 @@ int NGE_CalculateBearing(float right, float down)
 	{
 		return DEGREES(atan(MAGNITUDE(down) / MAGNITUDE(right))) + 270;
 	}
+	else
+	{
+		return 0;
+	}
 }
 
 float NGE_CalculateResultant(float x, float y)
@@ -104,12 +108,12 @@ float NGE_CalculateResultant(float x, float y)
 	return sqrt(pow(x, 2) + pow(y, 2));
 }
 
-float NGE_CalcualteRightValue(int bearing, float resultant)
+double NGE_CalcualteRightValue(int bearing, float resultant)
 {
 	return sin(RADIANS(bearing))*resultant;
 }
 
-float NGE_CalcualteDownValue(int bearing, float resultant)
+double NGE_CalcualteDownValue(int bearing, float resultant)
 {
 	return -cos(RADIANS(bearing))*resultant;
 }

@@ -11,7 +11,7 @@ using namespace std;
 //Convert degrees to radians
 #define RADIANS(n)(n*(M_PI/180))
 //Convert radians to degrees
-#define DEGREES(n)(n*180/M_PI)
+#define DEGREES(n)(static_cast<int>(n*180/M_PI))
 //Calculate the magintude of a number
 #define MAGNITUDE(n)(sqrt(n*n))
 
@@ -40,9 +40,9 @@ int NGE_CalculateBearing(float right, float down);
 float NGE_CalculateResultant(float x, float y);
 
 //Calculates the right directional magnitude of a line with a given beaing and resultant/total magnitude
-float NGE_CalcualteRightValue(int bearing, float resultant);
+double NGE_CalcualteRightValue(int bearing, float resultant);
 
 //Calculates the down directional magnitude of a line with a given beaing and resultant/total magnitude
-float NGE_CalcualteDownValue(int bearing, float resultant);
+double NGE_CalcualteDownValue(int bearing, float resultant);
 
 #endif
