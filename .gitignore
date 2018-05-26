@@ -3,6 +3,8 @@
 
 # But not these files...
 !.gitignore
+!NGE_Master.cpp
+!NGE_Master.h
 !NGE_Window.cpp
 !NGE_Window.h
 !NGE.h
