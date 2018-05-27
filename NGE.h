@@ -10,5 +10,8 @@ using namespace std;
 //Includes all other NGE headers, so you only need to include this header in your program
 #include "NGE_Master.h"
 #include "NGE_Window.h"
+#include "NGE_Maths.h"
+#include "NGE_Event.h"
+#include "NGE_Timing.h"
 
 #endif
