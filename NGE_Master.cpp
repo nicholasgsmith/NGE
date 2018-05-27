@@ -25,3 +25,24 @@ int NGE_Setup()
 	return 0;
 }
 
+int NGE_RegulateFrameRate(int rate)
+{
+	//Stores the time the function was last called
+	static int previousTime;
+
+	//Works out if the time difference between this and the previous function call was too small
+	int waitTime;
+	waitTime = (1000 / rate) - (SDL_GetTicks() - previousTime);
+
+	//Delays if needed
+	if (waitTime > 0)
+	{
+		SDL_Delay(waitTime);
+	}
+
+	//Updates this to be the last time the function was called
+	previousTime = SDL_GetTicks();
+
+	return waitTime;
+}
+

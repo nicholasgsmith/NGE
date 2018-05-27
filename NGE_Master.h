@@ -25,4 +25,9 @@
 //Should be run once, at the start of any program
 int NGE_Setup();
 
+//When this function is called, it works out the time difference between now and the previous time this function was called
+//If this difference is too small to acheive the desired frame rate, it delays to increase the size of this gap
+//e.g. if you called this function 60ms after itself, with a desired framerate of 10, it would delay 40ms, and 1s/10 = 100ms and 60ms+40ms=100ms
+int NGE_RegulateFrameRate(int rate);
+
 #endif
