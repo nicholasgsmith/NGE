@@ -1,7 +1,6 @@
 #include "NGE_Event.h"
 using namespace std;
 
-//Constucts a blank new SDLevent
 NGE_Event::NGE_Event()
 {
 	source = NGE_SOURCE_NONE;
@@ -17,9 +16,11 @@ NGE_Event::NGE_Event()
 
 void loadWindowEvent(NGE_Event& event, SDL_Event& SDLevent)
 {
+	//Records the window as source and the time of the event
 	event.timeStamp = SDLevent.window.timestamp;
 	event.source = NGE_SOURCE_WINDOW;
 
+	//Figures out and records what happened to the window to trigger the event
 	switch (SDLevent.window.event)
 	{
 	case SDL_WINDOWEVENT_RESIZED:
@@ -36,8 +37,11 @@ void loadWindowEvent(NGE_Event& event, SDL_Event& SDLevent)
 
 void loadMouseMotionEvent(NGE_Event& event, SDL_Event& SDLevent)
 {
+	//Records the mouse as source and the time of the event
 	event.source = NGE_SOURCE_MOUSE;
 	event.timeStamp = SDLevent.motion.timestamp;
+
+	//Records the position of the cursor at the point of the event and that the event was caused by the cursor moving
 	event.cursor_x = SDLevent.motion.x;
 	event.cursor_y = SDLevent.motion.y;
 	event.mouseEventType = NGE_MOUSEEVENTTYPE_MOTION;
@@ -45,11 +49,15 @@ void loadMouseMotionEvent(NGE_Event& event, SDL_Event& SDLevent)
 
 void loadMousePressEvent(NGE_Event& event, SDL_Event& SDLevent)
 {
+	//Records the mouse as source and the time of the event
 	event.source = NGE_SOURCE_MOUSE;
 	event.timeStamp = SDLevent.button.timestamp;
+
+	//Records the position of the cursor at the point of the event
 	event.cursor_x = SDLevent.button.x;
 	event.cursor_y = SDLevent.button.y;
 
+	//Records which mouse button was used to trigger the event
 	switch (SDLevent.button.button)
 	{
 	case SDL_BUTTON_LEFT:
@@ -60,6 +68,7 @@ void loadMousePressEvent(NGE_Event& event, SDL_Event& SDLevent)
 		break;
 	}
 
+	//Records whether the button was pressed or released
 	switch (SDLevent.button.state)
 	{
 	case SDL_RELEASED:
@@ -73,6 +82,8 @@ void loadMousePressEvent(NGE_Event& event, SDL_Event& SDLevent)
 
 bool loadKeyboardEvent(NGE_Event& event, SDL_Event& SDLevent)
 {
+	//Confirms that the event was handled by a keyboard button being pressed or released
+	//Other possible keybaord events are ignored, most notably a button being continually held
 	if (SDLevent.type == SDL_KEYUP)
 	{
 		event.keyboardEventType = NGE_KEYBOARDEVENTTYPE_RELEASE;
@@ -86,9 +97,12 @@ bool loadKeyboardEvent(NGE_Event& event, SDL_Event& SDLevent)
 		return false;
 	}
 
+	//Records the keyboard as source and the time of the event
 	event.source = NGE_SOURCE_KEYBOARD;
 	event.timeStamp = SDLevent.key.timestamp;
 
+	//Records which key was pressed to trigger the event
+	//If it was a text key, the character that was pressed is also recorded
 	switch (SDLevent.key.keysym.sym)
 	{
 	case SDLK_BACKSPACE:
@@ -220,9 +234,10 @@ bool NGE_PollEvent(NGE_Event& event)
 {
 	SDL_Event SDLevent;
 
-	//Check if an ecent happened
+	//Check if an event happened
 	if (SDL_PollEvent(&SDLevent) == 1)
 	{
+		//Load the details for the event based off its source
 		switch (SDLevent.type)
 		{
 		case SDL_WINDOWEVENT:

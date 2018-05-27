@@ -20,6 +20,7 @@ enum NGE_KeyboardEventType { NGE_KEYBOARDEVENTTYPE_NONE, NGE_KEYBOARDEVENTTYPE_R
 class NGE_Event
 {
 public:
+	//Constucts a new, blank Event
 	NGE_Event();
 
 	//Records the source of the event
