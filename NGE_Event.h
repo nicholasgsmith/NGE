@@ -45,5 +45,9 @@ public:
 	int timeStamp;
 };
 
+//Returns true if an external source has caused an event e.g. mouse button press, keyboard input, window resize
+//Records the details of the event in the event parameter
+bool NGE_PollEvent(NGE_Event& event);
+
 
 #endif
