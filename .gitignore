@@ -11,4 +11,6 @@
 !NGE_Maths.h
 !NGE_Timing.cpp
 !NGE_Timing.h
+!NGE_Event.cpp
+!NGE_Event.h
 !NGE.h
