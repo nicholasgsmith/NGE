@@ -52,6 +52,7 @@ int NGE_Texture::deleteTexture()
 	if (loadedTexture)
 	{
 		glDeleteTextures(1, getTextureIDAddress());
+		loadedTexture = false;
 	}
 	return 0;
 }
@@ -153,8 +154,45 @@ int NGE_Texture::loadTextureFromFile(string file, string textureID, bool removeS
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texturePixels);
+	loadedTexture = true;
 
 	delete[] temporaryTexturePixelsStorage;
 	delete[] texturePixels;
+	return 0;
+}
+
+int NGE_Texture::setTextureCanvas(int canvasWidth, int canvasHeight, GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha)
+{
+	//If a texture has already been loaded, it is deleteed before we continue
+	deleteTexture();
+
+	//We create an array to store the canvas information
+	GLuint* texturePixelData;
+	texturePixelData = new GLuint[canvasWidth*canvasHeight];
+
+	//We loop through the array and changes the color values to be what was inputted
+	for (int i = 0; i < canvasWidth * canvasHeight; ++i)
+	{
+		GLubyte* coloredPixelData = (GLubyte*)&texturePixelData[i];
+		coloredPixelData[0] = red;
+		coloredPixelData[1] = green;
+		coloredPixelData[2] = blue;
+		coloredPixelData[3] = alpha;
+	}
+
+	//Save this array as a new texturePixelData
+	glBindTexture(GL_TEXTURE_2D, NULL);
+	glGenTextures(1, getTextureIDAddress());
+	glBindTexture(GL_TEXTURE_2D, *getTextureIDAddress());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, canvasWidth, canvasHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, texturePixelData);
+	loadedTexture = true;
+
+	//The width and height of the texture are stored
+	width = canvasWidth;
+	height = canvasHeight;
+
+	delete[] texturePixelData;
 	return 0;
 }

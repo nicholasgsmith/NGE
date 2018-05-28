@@ -43,6 +43,9 @@ public:
 	//Loads a texture from a file
 	int loadTextureFromFile(string file, string textureID, bool removeSpace);
 
+	//Sets the texture to a be a singular color image of the given size
+	int setTextureCanvas(int canvasWidth, int canvasHeight, GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha);
+
 	//If a texture has been loaded, it is deleted and the memory freed
 	int deleteTexture();
 };
