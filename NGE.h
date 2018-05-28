@@ -13,5 +13,6 @@ using namespace std;
 #include "NGE_Maths.h"
 #include "NGE_Event.h"
 #include "NGE_Timing.h"
+#include "NGE_Texture.h"
 
 #endif

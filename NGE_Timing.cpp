@@ -1,8 +1,6 @@
 #include "NGE_Timing.h"
 using namespace std;
 
-#include "NGE.h"
-
 using namespace std;
 
 NGE_Timer::NGE_Timer()

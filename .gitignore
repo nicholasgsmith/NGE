@@ -13,4 +13,6 @@
 !NGE_Timing.h
 !NGE_Event.cpp
 !NGE_Event.h
+!NGE_Texture.cpp
+!NGE_Texture.h
 !NGE.h
