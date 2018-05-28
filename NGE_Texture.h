@@ -8,8 +8,8 @@ using namespace std;
 class NGE_Texture
 {
 private:
-	int width_, height_;
-	GLuint textureID_;
+	int width, height;
+	GLuint textureID;
 
 public:
 	NGE_Texture();
@@ -19,7 +19,6 @@ public:
 	int getWidth();
 	int setHeight(int height);
 	int getHeight();
-	int getTextureID();
 	GLuint* getTextureIDAddress();
 };
 
