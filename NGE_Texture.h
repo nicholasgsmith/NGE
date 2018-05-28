@@ -5,9 +5,13 @@ using namespace std;
 
 #include "NGE_Master.h"
 
+#include <string>
+#include <fstream>
+
 class NGE_Texture
 {
 private:
+	bool loadedTexture;
 	int width, height;
 	GLuint textureID;
 
@@ -30,8 +34,17 @@ public:
 	//Returns the width of the texture
 	int getHeight();
 
+	//Returns if a texture has been loaded
+	bool isTextureLoaded();
+
 	//Returns the ID of the texture
 	GLuint* getTextureIDAddress();
+
+	//Loads a texture from a file
+	int loadTextureFromFile(string file, string textureID, bool removeSpace);
+
+	//If a texture has been loaded, it is deleted and the memory freed
+	int deleteTexture();
 };
 
 #endif
