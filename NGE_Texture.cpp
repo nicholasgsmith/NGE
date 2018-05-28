@@ -10,6 +10,7 @@ NGE_Texture::NGE_Texture()
 
 NGE_Texture::~NGE_Texture()
 {
+	//Frees up the memory allocated to the texture by DevIL
 	glDeleteTextures(1, getTextureIDAddress());
 }
 
