@@ -7,4 +7,20 @@ using namespace std;
 
 #include <string>
 
+class NGE_SoundBite
+{
+private:
+	bool soundLoaded;
+	Mix_Chunk *soundBite;
+
+public:
+	NGE_SoundBite();
+	NGE_SoundBite(string file);
+	bool isSoundLoaded();
+	int loadSoundBite(string file);
+	int deleteSoundBite();
+	int playSound(int channel);
+};
+
+
 #endif
