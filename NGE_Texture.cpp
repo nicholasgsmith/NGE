@@ -3,7 +3,7 @@ using namespace std;
 
 NGE_Texture::NGE_Texture()
 {
-	loadedTexture = false;
+	textureLoaded = false;
 	width = 0;
 	height = 0;
 	textureID = 0;
@@ -39,7 +39,7 @@ int NGE_Texture::getHeight()
 
 bool NGE_Texture::isTextureLoaded()
 {
-	return loadedTexture;
+	return textureLoaded;
 }
 
 GLuint* NGE_Texture::getTextureIDAddress()
@@ -49,10 +49,10 @@ GLuint* NGE_Texture::getTextureIDAddress()
 
 int NGE_Texture::deleteTexture()
 {
-	if (loadedTexture)
+	if (textureLoaded)
 	{
 		glDeleteTextures(1, getTextureIDAddress());
-		loadedTexture = false;
+		textureLoaded = false;
 	}
 	return 0;
 }
@@ -70,14 +70,14 @@ int NGE_Texture::loadTextureFromFile(string file, string textureID, bool removeS
 	//If a texture has already been loaded, it is deleteed before we continue
 	deleteTexture();
 
-	ILuint loadedTextureData;
+	ILuint textureLoadedData;
 	GLuint* temporaryTexturePixelsStorage;
 	GLuint* texturePixels;
 
 	//Here the image data is loaded using DevIL into a DevIL image
 	glDisable(GL_DEPTH_TEST);
-	ilGenImages(1, &loadedTextureData);
-	ilBindImage(loadedTextureData);
+	ilGenImages(1, &textureLoadedData);
+	ilBindImage(textureLoadedData);
 	if (ilLoadImage((const ILstring)file.c_str()) == IL_FALSE)
 	{
 		return -1;
@@ -92,7 +92,7 @@ int NGE_Texture::loadTextureFromFile(string file, string textureID, bool removeS
 	int totalPixelsInTexture = width * height;
 	temporaryTexturePixelsStorage = new GLuint[totalPixelsInTexture];
 	memcpy(temporaryTexturePixelsStorage, ilGetData(), totalPixelsInTexture * 4);
-	ilDeleteImages(1, &loadedTextureData);
+	ilDeleteImages(1, &textureLoadedData);
 
 	if (removeSpace)
 	{
@@ -154,7 +154,7 @@ int NGE_Texture::loadTextureFromFile(string file, string textureID, bool removeS
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texturePixels);
-	loadedTexture = true;
+	textureLoaded = true;
 
 	delete[] temporaryTexturePixelsStorage;
 	delete[] texturePixels;
@@ -187,7 +187,7 @@ int NGE_Texture::setTextureCanvas(int canvasWidth, int canvasHeight, GLubyte red
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, canvasWidth, canvasHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, texturePixelData);
-	loadedTexture = true;
+	textureLoaded = true;
 
 	//The width and height of the texture are stored
 	width = canvasWidth;

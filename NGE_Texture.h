@@ -11,7 +11,7 @@ using namespace std;
 class NGE_Texture
 {
 private:
-	bool loadedTexture;
+	bool textureLoaded;
 	int width, height;
 	GLuint textureID;
 

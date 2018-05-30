@@ -5,4 +5,6 @@ using namespace std;
 
 #include "NGE_Master.h"
 
+#include <string>
+
 #endif
