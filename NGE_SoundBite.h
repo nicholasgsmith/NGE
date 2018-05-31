@@ -1,5 +1,5 @@
-#ifndef NGE_SOUND_H
-#define NGE_SOUND_H
+#ifndef NGE_SOUNDBITE_H
+#define NGE_SOUNDBITE_H
 
 using namespace std;
 

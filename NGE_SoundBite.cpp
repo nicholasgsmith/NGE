@@ -1,4 +1,4 @@
-#include "NGE_Sound.h"
+#include "NGE_SoundBite.h"
 using namespace std;
 
 #include "NGE.h"

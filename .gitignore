@@ -15,6 +15,10 @@
 !NGE_Event.h
 !NGE_Texture.cpp
 !NGE_Texture.h
-!NGE_Sound.cpp
-!NGE_Sound.h
+!NGE_SoundBite.cpp
+!NGE_SoundBite.h
+!NGE_Music.cpp
+!NGE_Music.h
+!NGE_SoundChannel.cpp
+!NGE_SoundChannel.h
 !NGE.h

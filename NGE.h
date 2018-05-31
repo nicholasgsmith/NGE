@@ -14,6 +14,6 @@ using namespace std;
 #include "NGE_Event.h"
 #include "NGE_Timing.h"
 #include "NGE_Texture.h"
-#include "NGE_Sound.h"
+#include "NGE_SoundBite.h"
 
 #endif
