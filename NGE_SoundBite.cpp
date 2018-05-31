@@ -35,6 +35,7 @@ int NGE_SoundBite::loadSoundBite(string file)
 		canOpen.close();
 		//Loads the soundbite from the file
 		soundBite = Mix_LoadWAV(file.c_str());
+		soundLoaded = true;
 		return 0;
 	}
 	else
