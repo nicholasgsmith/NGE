@@ -23,22 +23,35 @@ NGE_Font::NGE_Font(string file, int textSize)
 
 NGE_Font::~NGE_Font()
 {
+	//Frees up any memory allocated to the instance
 	deleteFont();
 }
 
 int NGE_Font::deleteFont()
 {
-	for (int i = 0; i < 256; i++)
+	if (fontLoaded)
 	{
-		delete[] characterData[i];
+		//Deletes all of the data for each loaded character
+		for (int i = 0; i < 256; i++)
+		{
+			delete[] characterData[i];
+		}
+
+		//Frees up memory allocated to the FTT face
+		FT_Done_Face(face);
+
+		fontLoaded = false;
+		return 0;
 	}
-	FT_Done_Face(face);
-	fontLoaded = false;
-	return 0;
+	else
+	{
+		return -1;
+	}
 }
 
 int NGE_Font::loadFont(string file, int textSize)
 {
+	//Confirms the file we are trying to load from is accesable
 	ifstream canOpen(file);
 	if (!canOpen)
 	{
@@ -46,28 +59,44 @@ int NGE_Font::loadFont(string file, int textSize)
 	}
 	canOpen.close();
 
-	this->textSize = textSize;
+	//Confirms a font hasnt already been loaded
+	if (fontLoaded)
+	{
+		return -1;
+	}
 
+	//Intialises the libary that will store this font
 	FT_Init_FreeType(&libary);
 
-	//here it loops through the font and removes the data for each character
+	//Loops through the instance and clears any residual data that could be left from a previous font
 	FT_New_Face(libary, file.c_str(), 0, &face);
 	FT_Set_Pixel_Sizes(face, 0, textSize);
 
+	//Loops through each character (ASCII)
 	for (int i = 0; i < 256; ++i)
 	{
+		//Loads the character data into out FTT face
 		FT_Load_Char(face, i, FT_LOAD_RENDER);
+
+		//Loads the characters metrics and 
 		metrics[i] = face->glyph->metrics;
+		//Loads the characters width and height
 		int width = face->glyph->bitmap.width;
 		int height = face->glyph->bitmap.rows;
+		//Loads the characters data
 		characterData[i] = new GLubyte[width*height];
 		memcpy(characterData[i], face->glyph->bitmap.buffer, width*height);
+		//Gets the vertical bearings of the character
 		int Ybearing = metrics[i].horiBearingY / 64;
-		int downYbearing = face->glyph->bitmap.rows - metrics[i].horiBearingY / 64; //
+		int downYbearing = face->glyph->bitmap.rows - metrics[i].horiBearingY / 64; 
+		//Stores all the bearings, width and height of the character
 		charWidth[i] = width;
 		charHeight[i] = height;
 		charYBearing[i] = Ybearing;
 		charDownYBearing[i] = downYbearing;
+
+		//Checks if this character has the largest width, height or bearings of any character checked so far
+		//We need this information when generating text to know how much space must be provided per charcter to ensure that every character fits
 		if (width > largestWidth)
 		{
 			largestWidth = width;
@@ -85,8 +114,15 @@ int NGE_Font::loadFont(string file, int textSize)
 			largestHeight = largestDownYBearing + largestYBearing;
 		}
 	}
+	//32 corresponds to a space
+	//By default it contains no information so we can interpret a space to be as large as we want
+	//We just assign it to be the width of the letter j in this case
 	metrics[32].width = metrics[106].width;
 	charWidth[32] = charWidth[106];
+
+	//We store the textsize for this font
+	this->textSize = textSize;
+
 	fontLoaded = true;
 	return 0;
 }

@@ -19,10 +19,20 @@ private:
 	bool fontLoaded;
 
 public:
+
+	//Creates a blank font instance
 	NGE_Font();
+
+	//Creates a fonr instance and loads into it a font with the given textsize from the provided file
 	NGE_Font(string file, int textSize);
+
+	//Deletes the font and frees up any memory allocated to it
 	~NGE_Font();
+
+	//Deletes a font from the instance, freeing up any memory allocated to it
 	int deleteFont();
+
+	//Loads a font with the given textsize from the provided file
 	int loadFont(string file, int textSize);
 };
 
