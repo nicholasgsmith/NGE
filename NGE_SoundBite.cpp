@@ -15,6 +15,11 @@ NGE_SoundBite::NGE_SoundBite(string file)
 	loadSoundBite(file);
 }
 
+NGE_SoundBite::~NGE_SoundBite()
+{
+	deleteSoundBite();
+}
+
 bool NGE_SoundBite::isSoundLoaded()
 {
 	return soundLoaded;

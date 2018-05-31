@@ -21,6 +21,9 @@ public:
 	//Creates a new soundbite instance and attempts to load a soundbite from the provided file into it
 	NGE_SoundBite(string file);
 
+	//Deletes a soundbite and unallocates memory assigned to it
+	~NGE_SoundBite();
+
 	//Returns whether the instance has had a soundbite loaded into it
 	bool isSoundLoaded();
 
