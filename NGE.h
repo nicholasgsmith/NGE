@@ -15,5 +15,6 @@ using namespace std;
 #include "NGE_Timing.h"
 #include "NGE_Texture.h"
 #include "NGE_SoundBite.h"
+#include "NGE_Music.h"
 
 #endif
