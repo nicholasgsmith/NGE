@@ -16,7 +16,9 @@ private:
 	GLuint charHeight[255], charWidth[255], charYBearing[255], charDownYBearing[255];
 	FT_Library libary;
 	int textSize, largestWidth, largestHeight, largestYBearing, largestDownYBearing;
+	bool fontLoaded;
 
+public:
 	NGE_Font();
 	NGE_Font(string file, int textSize);
 	~NGE_Font();
