@@ -23,4 +23,6 @@
 !NGE_SoundChannel.h
 !NGE_Font.cpp
 !NGE_Font.h
+!NGE_File.cpp
+!NGE_File.h
 !NGE.h
