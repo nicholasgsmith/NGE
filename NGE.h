@@ -16,5 +16,6 @@ using namespace std;
 #include "NGE_Texture.h"
 #include "NGE_SoundBite.h"
 #include "NGE_Music.h"
+#include "NGE_SoundChannel.h"
 
 #endif
