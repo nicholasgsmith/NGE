@@ -29,9 +29,12 @@ public:
 	bool doesFileExist(string file);
 	int linesInFile();
 	int itemsInLine(int line);
-	int appendInt(int data, bool newLine);
-	int appendDouble(double data, bool newLine);
-	int appendString(string data, bool newLine);
+
+	int addNewline();
+	int appendInt(int data, int lineNumber);
+	int appendDouble(double data, int lineNumber);
+	int appendString(string data, int lineNumber);
+
 	int readInt(int line, int item);
 	int readDouble(int line, int item);
 	int readString(int line, int item);

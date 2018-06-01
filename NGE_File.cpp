@@ -128,3 +128,66 @@ bool NGE_File::doesFileExist(string file)
 		return true;
 	}
 }
+
+int NGE_File::linesInFile()
+{
+	if (fileOpen)
+	{
+		int lines = 0;
+
+		string line;
+		ifstream counter(filename);
+		while (!counter.eof())
+		{
+			lines++;
+			getline(counter, line, '\n');
+		}
+		counter.close();
+		return lines;
+	}
+	else
+	{
+		return -1;
+	}
+}
+
+int NGE_File::itemsInLine(int lineNumber)
+{
+	if (lineNumber <= 0 || lineNumber > linesInFile() || !fileOpen)
+	{
+		return -1;
+	}
+	else
+	{
+		ifstream reader(filename);
+		string line;
+
+		for (int i = 1; i <= lineNumber; i++)
+		{
+			string line;
+			getline(reader, line, '\n');
+		}
+		reader.close();
+
+		int items = 1;
+		int i = 0, j = 0;
+
+		for (i = 0; i != line.size(); i++)
+		{
+			for (j = 0; j != seperator.size(); j++)
+			{
+				if (line.at(i) != seperator.at(j))
+				{
+					break;
+				}
+			}
+			if (j == seperator.size())
+			{
+				items++;
+			}
+		}
+
+		return items;
+	}
+	return -1;
+}
