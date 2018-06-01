@@ -20,7 +20,8 @@ public:
 	NGE_File();
 	NGE_File(string file);
 	int openFile(string file);
-	int createFile(string file);
+	int closeFile();
+	int createFile(string file, bool openFile);
 	int deleteFile();
 	int wipeFile();
 	int setSeperator(string seperator);
@@ -28,10 +29,9 @@ public:
 	bool doesFileExist(string file);
 	int linesInFile();
 	int itemsInLine(int line);
-	int appendInt(int data);
-	int appendDouble(double data);
-	int appendString(string data);
-	int appendNewline();
+	int appendInt(int data, bool newLine);
+	int appendDouble(double data, bool newLine);
+	int appendString(string data, bool newLine);
 	int readInt(int line, int item);
 	int readDouble(int line, int item);
 	int readString(int line, int item);
