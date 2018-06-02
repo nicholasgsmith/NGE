@@ -31,6 +31,12 @@ string NGE_DoubleToString(double value);
 //Converts a String to a double
 double NGE_StringToDouble(string value);
 
+//Converts a int to a String
+string NGE_IntToString(int value);
+
+//Converts a String to a int
+double NGE_StringToInt(string value);
+
 //Calculates the bearing of a line with the given right and down magnitudes
 //It is given in degree between 0 and 360
 //Down is 0, Right is 90, Up is 180 and Left is 270

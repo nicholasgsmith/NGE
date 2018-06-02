@@ -35,9 +35,9 @@ public:
 	int appendDouble(double data, int lineNumber);
 	int appendString(string data, int lineNumber);
 
-	int readInt(int line, int item);
-	int readDouble(int line, int item);
-	int readString(int line, int item);
+	int readInt(int& data, int lineNumber, int itemNumber);
+	int readDouble(double& data, int lineNumber, int itemNumber);
+	int readString(string& data, int lineNumber, int itemNumber);
 };
 
 #endif

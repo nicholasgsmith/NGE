@@ -62,6 +62,24 @@ double NGE_StringToDouble(string value)
 	return valueAsDouble;
 }
 
+string NGE_IntToString(int value)
+{
+	stringstream stream;
+	stream << value;
+	string valueAsString;
+	stream >> valueAsString;
+	return valueAsString;
+}
+
+double NGE_StringToInt(string value)
+{
+	stringstream stream;
+	stream << value;
+	int valueAsDouble;
+	stream >> valueAsDouble;
+	return valueAsDouble;
+}
+
 int NGE_CalculateBearing(float right, float down)
 {
 	//If one direction has a legth of 0, we cannot use tan correctly
