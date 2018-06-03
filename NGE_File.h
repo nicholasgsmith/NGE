@@ -16,6 +16,8 @@ private:
 	bool newline;
 	string filename;
 	string seperator;
+	string startSeperator;
+	string endSeperator;
 	vector< vector <string> > fileContents;
 
 public:

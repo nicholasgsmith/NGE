@@ -11,6 +11,8 @@ NGE_File::NGE_File()
 	newline = true;
 	filename = "";
 	seperator = "\",\"";
+	startSeperator = "\"";
+	endSeperator = "\"";
 }
 
 NGE_File::NGE_File(string file)
@@ -46,7 +48,7 @@ int NGE_File::openFile(string file)
 
 			fileContents.push_back(vector<string>());
 
-			for (j = 0; j != line.size(); j++)
+			for (j = startSeperator.size(); j != line.size()-endSeperator.size(); j++)
 			{
 				for (k = 0; k != seperator.size(); k++)
 				{
@@ -89,11 +91,16 @@ int NGE_File::saveFile()
 
 		for (int i = 0; i < lines; i++)
 		{
+			saver << startSeperator;
 			for (int j = 0; j != fileContents[i].size(); j++)
 			{
 				saver << fileContents[i][j];
-				saver << seperator;
+				if (j + 1 != fileContents[i].size())
+				{
+					saver << seperator;
+				}
 			}
+			saver << endSeperator;
 			saver << "\n";
 		}
 
