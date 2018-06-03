@@ -10,7 +10,7 @@ NGE_File::NGE_File()
 	fileOpen = false;
 	newline = true;
 	filename = "";
-	seperator = "";
+	seperator = "\",\"";
 }
 
 NGE_File::NGE_File(string file)
@@ -29,10 +29,47 @@ NGE_File::NGE_File(string file)
 
 int NGE_File::openFile(string file)
 {
-	if (doesFileExist(file))
+	if (doesFileExist(file) && !fileOpen)
 	{
 		filename = file;
 		fileOpen = true;
+
+		ifstream reader(filename);
+		string line = "";
+		string currentItem = "";
+		int lines = linesInFile();
+		int i, j, k;
+
+		for (i = 0; i < lines; i++)
+		{
+			getline(reader, line, '\n');
+
+			for (j = 0; j != line.size(); j++)
+			{
+				for (k = 0; k != seperator.size(); k++)
+				{
+					if (line.at(j + k) != seperator.at(k))
+					{
+						break;
+					}
+				}
+				if (k == seperator.size())
+				{
+					fileContents[i].push_back(currentItem);
+					currentItem = "";
+					j += k - 1;
+				}
+				else
+				{
+					currentItem = currentItem + line.at(j);
+				}
+			}
+			fileContents[i].push_back(currentItem);
+			currentItem = "";
+		}
+
+		reader.close();
+
 		return 0;
 	}
 	else
@@ -108,11 +145,6 @@ int NGE_File::wipeFile()
 	}
 }
 
-int NGE_File::setSeperator(string seperator)
-{
-	this->seperator = seperator;
-	return 0;
-}
 
 string NGE_File::getSeperator()
 {

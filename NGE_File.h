@@ -7,6 +7,7 @@ using namespace std;
 
 #include <string>
 #include <fstream>
+#include <vector>
 
 class NGE_File
 {
@@ -15,6 +16,7 @@ private:
 	bool newline;
 	string filename;
 	string seperator;
+	vector< vector <string> > fileContents;
 
 public:
 	NGE_File();
@@ -25,7 +27,6 @@ public:
 	int createFile(string file, bool openFile);
 	int deleteFile();
 	int wipeFile();
-	int setSeperator(string seperator);
 	string getSeperator();
 	bool doesFileExist(string file);
 
