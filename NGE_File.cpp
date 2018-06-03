@@ -253,6 +253,21 @@ int NGE_File::itemsInLine(int lineNumber)
 
 int NGE_File::readString(string& data, int lineNumber, int itemNumber)
 {
-	return 0;
+	if (fileOpen)
+	{
+		if (lineNumber >= 0 && lineNumber < linesInFile() && itemNumber >= 0 && itemNumber < itemsInLine(lineNumber))
+		{
+			data = fileContents[lineNumber][itemNumber];
+			return 0;
+		}
+		else
+		{
+			return -1;
+		}
+	}
+	else
+	{
+		return -2;
+	}
 }
 
