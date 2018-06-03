@@ -306,3 +306,23 @@ int NGE_File::appendString(string data, int lineNumber)
 	}
 }
 
+int NGE_File::editString(string data, int lineNumber, int itemNumber)
+{
+	if (fileOpen)
+	{
+		if (lineNumber >= 0 && lineNumber < linesInFile() && itemNumber >= 0 && itemNumber < itemsInLine(lineNumber))
+		{
+			fileContents[lineNumber][itemNumber] = data;
+			return 0;
+		}
+		else
+		{
+			return -1;
+		}
+	}
+	else
+	{
+		return -2;
+	}
+}
+

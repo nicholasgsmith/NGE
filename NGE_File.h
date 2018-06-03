@@ -36,6 +36,7 @@ public:
 	int addNewline();
 	int appendString(string data, int lineNumber);
 	int readString(string& data, int lineNumber, int itemNumber);
+	int editString(string data, int lineNumber, int itemNumber);
 };
 
 #endif
