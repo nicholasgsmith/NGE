@@ -36,10 +36,10 @@ public:
 	int itemsInLine(int line);
 
 	int addNewline();
-	int appendString(string data, int lineNumber);
-	int readString(string& data, int lineNumber, int itemNumber);
-	int editString(string data, int lineNumber, int itemNumber);
-	int deleteString(int lineNumber, int itemNumber);
+	int appendItem(string data, int lineNumber);
+	int readItem(string& data, int lineNumber, int itemNumber);
+	int editItem(string data, int lineNumber, int itemNumber);
+	int deleteItem(int lineNumber, int itemNumber);
 	int deleteLine(int lineNumber);
 };
 

@@ -249,7 +249,7 @@ int NGE_File::addNewline()
 	}
 }
 
-int NGE_File::readString(string& data, int lineNumber, int itemNumber)
+int NGE_File::readItem(string& data, int lineNumber, int itemNumber)
 {
 	if (fileOpen)
 	{
@@ -269,7 +269,7 @@ int NGE_File::readString(string& data, int lineNumber, int itemNumber)
 	}
 }
 
-int NGE_File::appendString(string data, int lineNumber)
+int NGE_File::appendItem(string data, int lineNumber)
 {
 	if (fileOpen)
 	{
@@ -289,7 +289,7 @@ int NGE_File::appendString(string data, int lineNumber)
 	}
 }
 
-int NGE_File::editString(string data, int lineNumber, int itemNumber)
+int NGE_File::editItem(string data, int lineNumber, int itemNumber)
 {
 	if (fileOpen)
 	{
@@ -309,7 +309,7 @@ int NGE_File::editString(string data, int lineNumber, int itemNumber)
 	}
 }
 
-int NGE_File::deleteString(int lineNumber, int itemNumber)
+int NGE_File::deleteItem(int lineNumber, int itemNumber)
 {
 	if (fileOpen)
 	{
