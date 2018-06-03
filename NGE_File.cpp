@@ -193,17 +193,7 @@ int NGE_File::linesInFile()
 {
 	if (fileOpen)
 	{
-		int lines = 0;
-
-		string line;
-		ifstream counter(filename);
-		while (!counter.eof())
-		{
-			lines++;
-			getline(counter, line, '\n');
-		}
-		counter.close();
-		return lines;
+		return fileContents.size();
 	}
 	else
 	{
@@ -213,44 +203,21 @@ int NGE_File::linesInFile()
 
 int NGE_File::itemsInLine(int lineNumber)
 {
-	if (lineNumber <= 0 || lineNumber > linesInFile() || !fileOpen)
+	if (fileOpen)
 	{
-		return -1;
+		if (lineNumber >= 0 && lineNumber < linesInFile())
+		{
+			return fileContents[lineNumber].size();
+		}
+		else
+		{
+			return -1;
+		}
 	}
 	else
 	{
-		ifstream reader(filename);
-		string line;
-
-		for (int i = 1; i <= lineNumber; i++)
-		{
-			string line;
-			getline(reader, line, '\n');
-		}
-		reader.close();
-
-		int items = 1;
-		int i = 0, j = 0;
-
-		for (i = 0; i != line.size(); i++)
-		{
-			for (j = 0; j != seperator.size(); j++)
-			{
-				if (line.at(i+j) != seperator.at(j))
-				{
-					break;
-				}
-			}
-			if (j == seperator.size())
-			{
-				items++;
-				i += j-1;
-			}
-		}
-
-		return items;
+		return -2;
 	}
-	return -1;
 }
 
 int NGE_File::addNewline()
