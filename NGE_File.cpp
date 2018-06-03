@@ -39,22 +39,23 @@ int NGE_File::openFile(string file)
 		ifstream reader(filename);
 		string line = "";
 		string currentItem = "";
-		int lines = linesInFile();
-		int i, j, k;
+		signed int i = 0, j = 0, k = 0;
 
-		for (i = 0; i < lines; i++)
+		while (getline(reader, line, '\n'))
 		{
-			getline(reader, line, '\n');
-
 			fileContents.push_back(vector<string>());
+			int limit = line.size() - endSeperator.size();
 
-			for (j = startSeperator.size(); j != line.size()-endSeperator.size(); j++)
-			{
-				for (k = 0; k != seperator.size(); k++)
+			for (j = startSeperator.size(); j < limit; j++)
+			{	
+				if (j + seperator.size() < line.size())
 				{
-					if (line.at(j + k) != seperator.at(k))
+					for (k = 0; k < seperator.size(); k++)
 					{
-						break;
+						if (line.at(j + k) != seperator.at(k))
+						{
+							break;
+						}
 					}
 				}
 				if (k == seperator.size())
@@ -62,14 +63,19 @@ int NGE_File::openFile(string file)
 					fileContents[i].push_back(currentItem);
 					currentItem = "";
 					j += k - 1;
+					k = 0;
 				}
 				else
 				{
 					currentItem = currentItem + line.at(j);
 				}
 			}
-			fileContents[i].push_back(currentItem);
+			if (line.size() != 0)
+			{
+				fileContents[i].push_back(currentItem);
+			}
 			currentItem = "";
+			i++;
 		}
 
 		reader.close();
@@ -91,17 +97,20 @@ int NGE_File::saveFile()
 
 		for (int i = 0; i < lines; i++)
 		{
-			saver << startSeperator;
-			for (int j = 0; j != fileContents[i].size(); j++)
+			if (fileContents[i].size() > 0)
 			{
-				saver << fileContents[i][j];
-				if (j + 1 != fileContents[i].size())
+				saver << startSeperator;
+				for (int j = 0; j != fileContents[i].size(); j++)
 				{
-					saver << seperator;
+					saver << fileContents[i][j];
+					if (j + 1 != fileContents[i].size())
+					{
+						saver << seperator;
+					}
 				}
+				saver << endSeperator;
 			}
-			saver << endSeperator;
-			saver << "\n";
+			saver << '\n';
 		}
 
 		saver.close();
@@ -117,9 +126,9 @@ int NGE_File::closeFile()
 {
 	if (fileOpen)
 	{
-		saveFile();
 		filename = "";
 		fileOpen = false;
+		fileContents.clear();
 		return 0;
 	}
 	else
