@@ -309,3 +309,43 @@ int NGE_File::editString(string data, int lineNumber, int itemNumber)
 	}
 }
 
+int NGE_File::deleteString(int lineNumber, int itemNumber)
+{
+	if (fileOpen)
+	{
+		if (lineNumber >= 0 && lineNumber < linesInFile() && itemNumber >= 0 && itemNumber < itemsInLine(lineNumber))
+		{
+			fileContents[lineNumber].erase(fileContents[lineNumber].begin() + itemNumber);
+			return 0;
+		}
+		else
+		{
+			return -1;
+		}
+	}
+	else
+	{
+		return -2;
+	}
+}
+
+int NGE_File::deleteLine(int lineNumber)
+{
+	if (fileOpen)
+	{
+		if (lineNumber >= 0 && lineNumber < linesInFile())
+		{
+			fileContents.erase(fileContents.begin() + lineNumber);
+			return 0;
+		}
+		else
+		{
+			return -1;
+		}
+	}
+	else
+	{
+		return -2;
+	}
+}
+
