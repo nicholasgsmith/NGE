@@ -44,6 +44,8 @@ int NGE_File::openFile(string file)
 		{
 			getline(reader, line, '\n');
 
+			fileContents.push_back(vector<string>());
+
 			for (j = 0; j != line.size(); j++)
 			{
 				for (k = 0; k != seperator.size(); k++)
@@ -249,6 +251,19 @@ int NGE_File::itemsInLine(int lineNumber)
 		return items;
 	}
 	return -1;
+}
+
+int NGE_File::addNewline()
+{
+	if (fileOpen)
+	{
+		fileContents.push_back(vector<string>());
+		return 0;
+	}
+	else
+	{
+		return -1;
+	}
 }
 
 int NGE_File::readString(string& data, int lineNumber, int itemNumber)
