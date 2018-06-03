@@ -80,13 +80,35 @@ int NGE_File::openFile(string file)
 
 int NGE_File::saveFile()
 {
-	return 0;
+	if (fileOpen)
+	{
+		ofstream saver(filename);
+		int lines = linesInFile();
+
+		for (int i = 0; i < lines; i++)
+		{
+			for (int j = 0; j != fileContents[i].size(); j++)
+			{
+				saver << fileContents[i][j];
+				saver << seperator;
+			}
+			saver << "\n";
+		}
+
+		saver.close();
+		return 0;
+	}
+	else
+	{
+		return -1;
+	}
 }
 
 int NGE_File::closeFile()
 {
 	if (fileOpen)
 	{
+		saveFile();
 		filename = "";
 		fileOpen = false;
 		return 0;
@@ -144,7 +166,6 @@ int NGE_File::wipeFile()
 		return -1;
 	}
 }
-
 
 string NGE_File::getSeperator()
 {
