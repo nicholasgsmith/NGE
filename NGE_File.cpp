@@ -271,3 +271,23 @@ int NGE_File::readString(string& data, int lineNumber, int itemNumber)
 	}
 }
 
+int NGE_File::appendString(string data, int lineNumber)
+{
+	if (fileOpen)
+	{
+		if (lineNumber >= 0 && lineNumber < linesInFile())
+		{
+			fileContents[lineNumber].push_back(data);
+			return 0;
+		}
+		else
+		{
+			return -1;
+		}
+	}
+	else
+	{
+		return -2;
+	}
+}
+
