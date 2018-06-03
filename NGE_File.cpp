@@ -41,6 +41,11 @@ int NGE_File::openFile(string file)
 	}
 }
 
+int NGE_File::saveFile()
+{
+	return 0;
+}
+
 int NGE_File::closeFile()
 {
 	if (fileOpen)
@@ -195,79 +200,6 @@ int NGE_File::itemsInLine(int lineNumber)
 
 int NGE_File::readString(string& data, int lineNumber, int itemNumber)
 {
-	if (lineNumber <= 0 || lineNumber > linesInFile() || !fileOpen || itemNumber <= 0 || itemNumber > itemsInLine(lineNumber))
-	{
-		return -1;
-	}
-
-	ifstream reader(filename);
-	string line;
-
-	for (int i = 1; i <= lineNumber; i++)
-	{
-		getline(reader, line, '\n');
-	}
-
-	reader.close();
-
-	int items = 1;
-	string currentItem = "";
-	int i = 0, j = 0;
-
-	for (i = 0; i != line.size(); i++)
-	{
-		currentItem = currentItem + line.at(i);
-		for (j = 0; j != seperator.size(); j++)
-		{
-			if (line.at(i+j) != seperator.at(j))
-			{
-				break;
-			}
-			i++;
-		}
-		if (j == seperator.size())
-		{
-			if (items == itemNumber)
-			{
-				data = currentItem;
-				return 0;
-			}
-			data = currentItem;
-			currentItem = "";
-			items++;
-			i += j - 1;
-		}
-	}
-
-	data = currentItem;
-
 	return 0;
 }
 
-int NGE_File::readInt(int& data, int lineNumber, int itemNumber)
-{
-	string item;
-	if (readString(item, lineNumber, itemNumber) != 0)
-	{
-		return -1;
-	}
-	else
-	{
-		data = NGE_StringToInt(item);
-		return 0;
-	}
-}
-
-int NGE_File::readDouble(double& data, int lineNumber, int itemNumber)
-{
-	string item;
-	if (readString(item, lineNumber, itemNumber) != 0)
-	{
-		return -1;
-	}
-	else
-	{
-		data = NGE_StringToDouble(item);
-		return 0;
-	}
-}
