@@ -25,4 +25,6 @@
 !NGE_Font.h
 !NGE_File.cpp
 !NGE_File.h
+!NGE_Entity.cpp
+!NGE_Entity.h
 !NGE.h

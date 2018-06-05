@@ -19,5 +19,6 @@ using namespace std;
 #include "NGE_SoundChannel.h"
 #include "NGE_Font.h"
 #include "NGE_File.h"
+#include "NGE_Entity.h"
 
 #endif
