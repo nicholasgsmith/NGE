@@ -11,12 +11,14 @@ class NGE_Font
 {
 private:
 	FT_Face face;
+	FT_Library libary;
+	bool fontLoaded;
+
+public:
 	FT_Glyph_Metrics metrics[256];
 	GLubyte* characterData[255];
 	GLuint charHeight[255], charWidth[255], charYBearing[255], charDownYBearing[255];
-	FT_Library libary;
 	int textSize, largestWidth, largestHeight, largestYBearing, largestDownYBearing;
-	bool fontLoaded;
 
 public:
 
@@ -31,6 +33,9 @@ public:
 
 	//Deletes a font from the instance, freeing up any memory allocated to it
 	int deleteFont();
+
+	//Returns true if a font has been loaded
+	bool isFontLoaded();
 
 	//Loads a font with the given textsize from the provided file
 	int loadFont(string file, int textSize);

@@ -126,3 +126,8 @@ int NGE_Font::loadFont(string file, int textSize)
 	fontLoaded = true;
 	return 0;
 }
+
+bool NGE_Font::isFontLoaded()
+{
+	return fontLoaded;
+}

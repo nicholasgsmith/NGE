@@ -196,3 +196,245 @@ int NGE_Texture::setTextureCanvas(int canvasWidth, int canvasHeight, GLubyte red
 	delete[] texturePixelData;
 	return 0;
 }
+
+int NGE_Texture::NGE_CreateText(NGE_Font font, string textToTurnToTexture, int finishedTextureWidth, int lineSpacing, Alignment alignment, GLubyte redValueOfText, GLubyte greenValueOfText, GLubyte blueValueOfText, GLubyte transparencyValueOfText)
+{
+	//Confirms that the file you are loading from exists
+	if (font.isFontLoaded())
+	{
+		return -1;
+	}
+
+	//If a texture has already been loaded, it is deleted before we continue
+	deleteTexture();
+
+	if (font.largestWidth > finishedTextureWidth + 1 && finishedTextureWidth != 0)
+	{
+		return -1;
+	}
+
+	textToTurnToTexture.append(" ");
+	int letterSpacing = font.metrics[32].width / 256;
+
+	//here it calculates what the finishedTextureWidth is if no finishedTextureWidth is given. In this case it places it all on 1 line
+	int currentNumberOfLines = 1;
+	if (finishedTextureWidth == 0)
+	{
+		char x = ' ';
+		int y = 0;
+		for (unsigned int i = 0; i < textToTurnToTexture.size(); i++)
+		{
+			x = textToTurnToTexture.at(i);
+			y = static_cast <int> (x);
+			finishedTextureWidth += font.metrics[y].width / 64 + letterSpacing;
+		}
+
+		finishedTextureWidth -= font.metrics[32].width / 64;
+		finishedTextureWidth -= letterSpacing;
+	}
+	else
+	{
+		//if the finishedTextureWidth is not 0 it must work out how many lines are needed
+		char x = ' ';
+		int y = 0;
+		int currentwidth = 0, wordLength = 0;
+		for (unsigned int i = 0; i < textToTurnToTexture.size(); i++)
+		{
+			//it loops through the textToTurnToTexture and adds the finishedTextureWidth of each char to the word length
+			x = textToTurnToTexture.at(i);
+			y = static_cast <int> (x);
+			wordLength += font.metrics[y].width / 64 + letterSpacing;
+			//when there is a space is when that word has ended. it checks if the word is smaller than the finishedTextureWidth
+			if (x == ' ')
+			{
+				if (wordLength - (font.metrics[y].width / 64 + letterSpacing) >= finishedTextureWidth)
+				{
+					return -1;
+				}
+				else
+				{
+					//it then works out whether:
+					//a) it will fit on the same line as the previous word
+					//b) it will fit on the same line as the previous word but there is no room for the space after it so a blank new line must be started anyway
+					//c) it doesn't fit on that line so a new line mst be started
+					if (currentwidth + wordLength > finishedTextureWidth)
+					{
+						if (currentwidth + wordLength - font.metrics[y].width / 64 + letterSpacing < finishedTextureWidth)
+						{
+							currentNumberOfLines++;
+							currentwidth = 0;
+							wordLength = 0;
+						}
+						else
+						{
+							currentNumberOfLines++;
+							currentwidth = wordLength;
+							wordLength = 0;
+						}
+					}
+					else
+					{
+						currentwidth += wordLength;
+						wordLength = 0;
+					}
+				}
+			}
+		}
+	}
+
+	//here the space is alloctaed to store the texture data. it is given a default value of zero.
+	//the textToTurnToTexture data only has an transparencyValueOfText value so a GLubyte array is used to store the original value
+	//this will then be moves into the color array after, which is a GLuint, where the coloredPixelData given at the start will be added to it
+	int finishedTextureHeight = font.largestHeight;
+	int numberOfPixels = finishedTextureWidth * (currentNumberOfLines*(lineSpacing + finishedTextureHeight));
+	GLuint* coloredFinishedTexture = new GLuint[numberOfPixels];
+	GLubyte* texturePixelData = new GLubyte[numberOfPixels];
+	for (int i = 0; i < numberOfPixels; i++)
+	{
+		texturePixelData[i] = 000;
+		coloredFinishedTexture[i] = 000;
+	}
+
+	char x = ' ';
+	int y = 0;
+	int currentwidth = 0, wordLength = 0, endDigit = 0, startDigit = 0, oldEndDigit = 0, currentLine = 0, temporaryWidth = 0, charStart = 0;
+	bool carried = false;
+	for (unsigned int i = 0; i < textToTurnToTexture.size(); i++)
+	{
+		x = textToTurnToTexture.at(i);
+		y = static_cast <int> (x);
+		wordLength += font.metrics[y].width / 64 + letterSpacing;
+		if (x == ' ')
+		{
+			if (currentwidth + wordLength > finishedTextureWidth || i + 1 == textToTurnToTexture.size())
+			{
+				if (currentwidth + wordLength - font.metrics[y].width / 64 - letterSpacing <= finishedTextureWidth)
+				{
+					endDigit = i;
+					carried = false;
+				}
+				else
+				{
+					endDigit = oldEndDigit;
+					carried = true;
+				}
+
+				int startOfLine = 0;
+				if (alignment == Alignment::left)
+				{
+					startOfLine = 0;
+				}
+				else if (alignment == Alignment::right)
+				{
+					startOfLine = finishedTextureWidth - currentwidth;
+					if (carried == false)
+					{
+						startOfLine -= (wordLength - font.metrics[y].width / 64 - letterSpacing);
+					}
+				}
+				else if (alignment == Alignment::center)
+				{
+					startOfLine = (finishedTextureWidth - currentwidth) / 2;
+					if (carried == false)
+					{
+						startOfLine -= (wordLength - font.metrics[y].width / 64 - letterSpacing) / 2;
+					}
+				}
+
+				temporaryWidth = 0;
+				for (int j = startDigit; j != endDigit; j++)
+				{
+					char character = textToTurnToTexture.at(j);
+					int charNumber = static_cast <int> (character);
+					charStart = 0;
+					for (int k = (font.largestYBearing - font.charYBearing[charNumber]) + ((finishedTextureHeight + lineSpacing)*currentLine); k != (font.largestYBearing - font.charYBearing[charNumber]) + +((finishedTextureHeight + lineSpacing)*currentLine) + font.charHeight[charNumber]; k++)
+					{
+						GLubyte* characterBuffer = font.characterData[charNumber];
+						memcpy(&texturePixelData[(k*finishedTextureWidth) + temporaryWidth + startOfLine + 1], &characterBuffer[charStart * font.charWidth[charNumber]], font.charWidth[charNumber]);
+						charStart++;
+					}
+					temporaryWidth += font.charWidth[charNumber] + letterSpacing;
+				}
+
+				if (carried == true)
+				{
+					currentwidth = wordLength;
+				}
+				else
+				{
+					currentwidth = 0;
+				}
+				startDigit = endDigit + 1;
+				wordLength = 0;
+				currentLine++;
+			}
+			else
+			{
+				currentwidth += wordLength;
+				wordLength = 0;
+			}
+			oldEndDigit = i;
+
+			//here it adds on the last word if it needs a new line
+			if (carried == true && i + 1 == textToTurnToTexture.size())
+			{
+				endDigit = i;
+				int startOfLine = 0;
+				if (alignment == Alignment::left)
+				{
+					startOfLine = 0;
+				}
+				else if (alignment == Alignment::right)
+				{
+					startOfLine = finishedTextureWidth - currentwidth - wordLength;
+				}
+				else if (alignment == Alignment::center)
+				{
+					startOfLine = (finishedTextureWidth - currentwidth - wordLength) / 2;
+				}
+
+				temporaryWidth = 0;
+				for (int j = startDigit; j != endDigit; j++)
+				{
+					char character = textToTurnToTexture.at(j);
+					int charNumber = static_cast <int> (character);
+					charStart = 0;
+					for (int k = (font.largestYBearing - font.charYBearing[charNumber]) + ((finishedTextureHeight + lineSpacing)*currentLine); k != (font.largestYBearing - font.charYBearing[charNumber]) + ((finishedTextureHeight + lineSpacing)*currentLine) + font.charHeight[charNumber]; k++)
+					{
+						GLubyte* characterBuffer = font.characterData[charNumber];
+						memcpy(&texturePixelData[(k*finishedTextureWidth) + temporaryWidth + startOfLine + 1], &characterBuffer[charStart * font.charWidth[charNumber]], font.charWidth[charNumber]);
+						charStart++;
+					}
+					temporaryWidth += font.charWidth[charNumber] + letterSpacing;
+				}
+			}
+		}
+	}
+
+	//		finishedTextureWidth -= ((2 * letterSpacing) + (font.metrics[32].width / 64));
+	//make new array, move into new array without end
+
+	for (int i = 0; i < numberOfPixels; i++)
+	{
+		GLubyte* coloredPixelData = (GLubyte*)&coloredFinishedTexture[i];
+		coloredPixelData[0] = redValueOfText;
+		coloredPixelData[1] = greenValueOfText;
+		coloredPixelData[2] = blueValueOfText;
+		coloredPixelData[3] = texturePixelData[i] / (255.0 / transparencyValueOfText);
+	}
+
+	glBindTexture(GL_TEXTURE_2D, NULL);
+	glGenTextures(1, getTextureIDAddress());
+	glBindTexture(GL_TEXTURE_2D, *getTextureIDAddress());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, finishedTextureWidth, numberOfPixels / finishedTextureWidth, 0, GL_RGBA, GL_UNSIGNED_BYTE, coloredFinishedTexture);
+
+	//here the finishedTextureWidth and finishedTextureHeight of the texture are stored
+	width = finishedTextureWidth;
+	height = numberOfPixels / finishedTextureWidth;
+
+	delete[] coloredFinishedTexture;
+	delete[] texturePixelData;
+	return 0;
+}

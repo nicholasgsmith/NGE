@@ -4,9 +4,12 @@
 using namespace std;
 
 #include "NGE_Master.h"
+#include "NGE_Font.h"
 
 #include <string>
 #include <fstream>
+
+enum class Alignment { right, left, center };
 
 class NGE_Texture
 {
@@ -34,7 +37,7 @@ public:
 	//Returns the width of the texture
 	int getHeight();
 
-	//Returns if a texture has been loaded
+	//Returns true if a texture has been loaded
 	bool isTextureLoaded();
 
 	//Returns the ID of the texture
@@ -48,6 +51,11 @@ public:
 
 	//If a texture has been loaded, it is deleted and the memory freed
 	int deleteTexture();
+
+	//Creates a new texture which is the given text in the given font and properties
+	//Set the width to 0 for the width to be set to the minimum value for the text to fit on a single line
+	int NGE_CreateText(NGE_Font font, string textToTurnToTexture, int finishedTextureWidth, int lineSpacing, Alignment alignment, GLubyte redValueOfText, GLubyte greenValueOfText, GLubyte blueValueOfText, GLubyte transparencyValueOfText);
+
 };
 
 #endif
