@@ -199,7 +199,7 @@ int NGE_Texture::setTextureCanvas(int canvasWidth, int canvasHeight, GLubyte red
 
 int NGE_Texture::NGE_CreateText(NGE_Font font, string textToTurnToTexture, int finishedTextureWidth, int lineSpacing, Alignment alignment, GLubyte redValueOfText, GLubyte greenValueOfText, GLubyte blueValueOfText, GLubyte transparencyValueOfText)
 {
-	//Confirms that the file you are loading from exists
+	//Confirms that a font was loaded into the font instance
 	if (font.isFontLoaded())
 	{
 		return -1;
@@ -208,20 +208,27 @@ int NGE_Texture::NGE_CreateText(NGE_Font font, string textToTurnToTexture, int f
 	//If a texture has already been loaded, it is deleted before we continue
 	deleteTexture();
 
+	//If the width is less than  0 nothing can fit in it
+	//0 is ok, as this signals that we want the program to calulate the width for us
 	if (font.largestWidth > finishedTextureWidth + 1 && finishedTextureWidth != 0)
 	{
-		return -1;
+		return -2;
 	}
 
+	//We add a space at the end so that every word ends in a space for simplicity
 	textToTurnToTexture.append(" ");
+	
+	//The spacing between the letters is set to a 4th of charcter 32
 	int letterSpacing = font.metrics[32].width / 256;
 
-	//here it calculates what the finishedTextureWidth is if no finishedTextureWidth is given. In this case it places it all on 1 line
+	//If the width was set to 0 the width is calculated such that the entire text fits on one line
 	int currentNumberOfLines = 1;
 	if (finishedTextureWidth == 0)
 	{
 		char x = ' ';
 		int y = 0;
+
+		//The required width will just be the sum of the widths of all the letters + letter spacing
 		for (unsigned int i = 0; i < textToTurnToTexture.size(); i++)
 		{
 			x = textToTurnToTexture.at(i);
@@ -229,48 +236,42 @@ int NGE_Texture::NGE_CreateText(NGE_Font font, string textToTurnToTexture, int f
 			finishedTextureWidth += font.metrics[y].width / 64 + letterSpacing;
 		}
 
+		//We remove the space at the end that was included earlier
 		finishedTextureWidth -= font.metrics[32].width / 64;
 		finishedTextureWidth -= letterSpacing;
 	}
 	else
 	{
-		//if the finishedTextureWidth is not 0 it must work out how many lines are needed
+		//If the finishedTextureWidth is not 0 it must work out how many lines are needed
 		char x = ' ';
 		int y = 0;
 		int currentwidth = 0, wordLength = 0;
+
 		for (unsigned int i = 0; i < textToTurnToTexture.size(); i++)
 		{
-			//it loops through the textToTurnToTexture and adds the finishedTextureWidth of each char to the word length
+			//It keeps adding on the length of the word it is currently going through
 			x = textToTurnToTexture.at(i);
 			y = static_cast <int> (x);
 			wordLength += font.metrics[y].width / 64 + letterSpacing;
-			//when there is a space is when that word has ended. it checks if the word is smaller than the finishedTextureWidth
+
+			//When there is a space is when that word has ended
+			//It checks if the word is smaller than the desired width, else it wont fit
 			if (x == ' ')
 			{
 				if (wordLength - (font.metrics[y].width / 64 + letterSpacing) >= finishedTextureWidth)
 				{
-					return -1;
+					return -3;
 				}
 				else
 				{
-					//it then works out whether:
-					//a) it will fit on the same line as the previous word
-					//b) it will fit on the same line as the previous word but there is no room for the space after it so a blank new line must be started anyway
-					//c) it doesn't fit on that line so a new line mst be started
+					//It then works out whether:
+					//a) it doesn't fit on that line so a new line must be started
+					//b) it will fit on the same line as the previous word
 					if (currentwidth + wordLength > finishedTextureWidth)
 					{
-						if (currentwidth + wordLength - font.metrics[y].width / 64 + letterSpacing < finishedTextureWidth)
-						{
-							currentNumberOfLines++;
-							currentwidth = 0;
-							wordLength = 0;
-						}
-						else
-						{
-							currentNumberOfLines++;
-							currentwidth = wordLength;
-							wordLength = 0;
-						}
+						currentNumberOfLines++;
+						currentwidth = wordLength;
+						wordLength = 0;
 					}
 					else
 					{
@@ -282,13 +283,15 @@ int NGE_Texture::NGE_CreateText(NGE_Font font, string textToTurnToTexture, int f
 		}
 	}
 
-	//here the space is alloctaed to store the texture data. it is given a default value of zero.
-	//the textToTurnToTexture data only has an transparencyValueOfText value so a GLubyte array is used to store the original value
-	//this will then be moves into the color array after, which is a GLuint, where the coloredPixelData given at the start will be added to it
+	//Here the space is allocated to store the texture data. it is given a default value of zero.
 	int finishedTextureHeight = font.largestHeight;
 	int numberOfPixels = finishedTextureWidth * (currentNumberOfLines*(lineSpacing + finishedTextureHeight));
+
+	//We only create the text in black and white, stored in Glubytes
+	//We switch this to Gluints whn we add color
 	GLuint* coloredFinishedTexture = new GLuint[numberOfPixels];
 	GLubyte* texturePixelData = new GLubyte[numberOfPixels];
+
 	for (int i = 0; i < numberOfPixels; i++)
 	{
 		texturePixelData[i] = 000;
@@ -299,26 +302,35 @@ int NGE_Texture::NGE_CreateText(NGE_Font font, string textToTurnToTexture, int f
 	int y = 0;
 	int currentwidth = 0, wordLength = 0, endDigit = 0, startDigit = 0, oldEndDigit = 0, currentLine = 0, temporaryWidth = 0, charStart = 0;
 	bool carried = false;
+
 	for (unsigned int i = 0; i < textToTurnToTexture.size(); i++)
 	{
+		//It keeps adding on the length of the word it is currently going through
 		x = textToTurnToTexture.at(i);
 		y = static_cast <int> (x);
 		wordLength += font.metrics[y].width / 64 + letterSpacing;
+
+		//When we reach a space we know the word has ended
 		if (x == ' ')
 		{
+			//Check if we need to render the oldline (if the new word wont fir or we are at the end of the text)
 			if (currentwidth + wordLength > finishedTextureWidth || i + 1 == textToTurnToTexture.size())
 			{
-				if (currentwidth + wordLength - font.metrics[y].width / 64 - letterSpacing <= finishedTextureWidth)
+				//If the word doesnt fit on the current line then the line needs to be rendered
+
+				if (currentwidth + wordLength > finishedTextureWidth)
+				{
+					//We flag that a word (the one that wouldn't fit) was carried over
+					endDigit = oldEndDigit;
+					carried = true;
+				}
+				else
 				{
 					endDigit = i;
 					carried = false;
 				}
-				else
-				{
-					endDigit = oldEndDigit;
-					carried = true;
-				}
 
+				//We set where to start rendering from based off the alignment of the text
 				int startOfLine = 0;
 				if (alignment == Alignment::left)
 				{
@@ -327,26 +339,21 @@ int NGE_Texture::NGE_CreateText(NGE_Font font, string textToTurnToTexture, int f
 				else if (alignment == Alignment::right)
 				{
 					startOfLine = finishedTextureWidth - currentwidth;
-					if (carried == false)
-					{
-						startOfLine -= (wordLength - font.metrics[y].width / 64 - letterSpacing);
-					}
 				}
 				else if (alignment == Alignment::center)
 				{
 					startOfLine = (finishedTextureWidth - currentwidth) / 2;
-					if (carried == false)
-					{
-						startOfLine -= (wordLength - font.metrics[y].width / 64 - letterSpacing) / 2;
-					}
 				}
 
+				//We render each character of the line
 				temporaryWidth = 0;
 				for (int j = startDigit; j != endDigit; j++)
 				{
 					char character = textToTurnToTexture.at(j);
 					int charNumber = static_cast <int> (character);
 					charStart = 0;
+
+					//Each characters data is copied in
 					for (int k = (font.largestYBearing - font.charYBearing[charNumber]) + ((finishedTextureHeight + lineSpacing)*currentLine); k != (font.largestYBearing - font.charYBearing[charNumber]) + +((finishedTextureHeight + lineSpacing)*currentLine) + font.charHeight[charNumber]; k++)
 					{
 						GLubyte* characterBuffer = font.characterData[charNumber];
@@ -356,6 +363,7 @@ int NGE_Texture::NGE_CreateText(NGE_Font font, string textToTurnToTexture, int f
 					temporaryWidth += font.charWidth[charNumber] + letterSpacing;
 				}
 
+				//If text was carried over then it needs to record the starting width
 				if (carried == true)
 				{
 					currentwidth = wordLength;
@@ -364,22 +372,28 @@ int NGE_Texture::NGE_CreateText(NGE_Font font, string textToTurnToTexture, int f
 				{
 					currentwidth = 0;
 				}
+
 				startDigit = endDigit + 1;
 				wordLength = 0;
 				currentLine++;
 			}
 			else
 			{
+				//Nothing is done until the current line cannot store any more words or we are at the end
 				currentwidth += wordLength;
 				wordLength = 0;
 			}
 			oldEndDigit = i;
 
-			//here it adds on the last word if it needs a new line
+			//We render a line when it is full or when we reach the end of the text
+			//If however, the final word caused the line to be full, then it will not be rendered, as only the full line will be rendered
+			//In this case we render it now
 			if (carried == true && i + 1 == textToTurnToTexture.size())
 			{
 				endDigit = i;
 				int startOfLine = 0;
+
+				//We set the starting position based of the alignment
 				if (alignment == Alignment::left)
 				{
 					startOfLine = 0;
@@ -393,12 +407,15 @@ int NGE_Texture::NGE_CreateText(NGE_Font font, string textToTurnToTexture, int f
 					startOfLine = (finishedTextureWidth - currentwidth - wordLength) / 2;
 				}
 
+				//We render each character of the word
 				temporaryWidth = 0;
 				for (int j = startDigit; j != endDigit; j++)
 				{
 					char character = textToTurnToTexture.at(j);
 					int charNumber = static_cast <int> (character);
 					charStart = 0;
+
+					//Each characters data is copied in
 					for (int k = (font.largestYBearing - font.charYBearing[charNumber]) + ((finishedTextureHeight + lineSpacing)*currentLine); k != (font.largestYBearing - font.charYBearing[charNumber]) + ((finishedTextureHeight + lineSpacing)*currentLine) + font.charHeight[charNumber]; k++)
 					{
 						GLubyte* characterBuffer = font.characterData[charNumber];
@@ -411,9 +428,7 @@ int NGE_Texture::NGE_CreateText(NGE_Font font, string textToTurnToTexture, int f
 		}
 	}
 
-	//		finishedTextureWidth -= ((2 * letterSpacing) + (font.metrics[32].width / 64));
-	//make new array, move into new array without end
-
+	//The uncolored texture data is converted to have color
 	for (int i = 0; i < numberOfPixels; i++)
 	{
 		GLubyte* coloredPixelData = (GLubyte*)&coloredFinishedTexture[i];
@@ -423,6 +438,7 @@ int NGE_Texture::NGE_CreateText(NGE_Font font, string textToTurnToTexture, int f
 		coloredPixelData[3] = texturePixelData[i] / (255.0 / transparencyValueOfText);
 	}
 
+	//The texture is created the Gluint array
 	glBindTexture(GL_TEXTURE_2D, NULL);
 	glGenTextures(1, getTextureIDAddress());
 	glBindTexture(GL_TEXTURE_2D, *getTextureIDAddress());
@@ -430,11 +446,13 @@ int NGE_Texture::NGE_CreateText(NGE_Font font, string textToTurnToTexture, int f
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, finishedTextureWidth, numberOfPixels / finishedTextureWidth, 0, GL_RGBA, GL_UNSIGNED_BYTE, coloredFinishedTexture);
 
-	//here the finishedTextureWidth and finishedTextureHeight of the texture are stored
+	//The finishedTextureWidth and finishedTextureHeight of the texture are stored
 	width = finishedTextureWidth;
 	height = numberOfPixels / finishedTextureWidth;
 
+	//Arrays used to store data are deleted
 	delete[] coloredFinishedTexture;
 	delete[] texturePixelData;
+
 	return 0;
 }
