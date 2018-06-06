@@ -11,17 +11,19 @@ enum class Direction { left, right, up, down };
 class NGE_Entity
 {
 protected:
-	GLuint textureID;
-	int borderRed, borderGreen, borderBlue, borderAlpha, borderWidth;
 	int width, height, centerX, centerY, rotation, cornerCordinates[8], positions[4], rotated[8];
 	bool changeInPosition, flipped;
+
 	void calculatePositionData();
 	float positionData[17];
 	float sideEquations[8];
 
+	GLuint textureID;
 	int canvasAlpha, canvasBlue, canvasGreen, canvasRed;
+	int borderRed, borderGreen, borderBlue, borderAlpha, borderWidth;
 
 public:
+	NGE_Entity();
 	int setBorder(int borderWidth, int red, int green, int blue, int alpha);
 	int assignTexture(NGE_Texture texture, bool setToTextureSize);
 	int render();
