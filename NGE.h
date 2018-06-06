@@ -20,5 +20,6 @@ using namespace std;
 #include "NGE_Font.h"
 #include "NGE_File.h"
 #include "NGE_Entity.h"
+#include "NGE_Render.h"
 
 #endif

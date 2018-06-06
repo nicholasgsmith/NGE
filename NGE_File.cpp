@@ -42,7 +42,7 @@ int NGE_File::openFile(string file)
 		ifstream reader(filename);
 		string line = "";
 		string currentItem = "";
-		signed int i = 0, j = 0, k = 0;
+		int i = 0, j = 0, k = 0;
 
 		//Loop through and load each line of the file
 		while (getline(reader, line, '\n'))

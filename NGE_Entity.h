@@ -4,6 +4,7 @@
 using namespace std;
 #include "NGE_Master.h"
 #include "NGE_Texture.h"
+#include "NGE_Render.h"
 
 enum class Side { width, height };
 enum class Direction { left, right, up, down };
@@ -18,7 +19,7 @@ protected:
 	float positionData[17];
 	float sideEquations[8];
 
-	GLuint textureID;
+	GLuint texture;
 	int canvasAlpha, canvasBlue, canvasGreen, canvasRed;
 	int borderRed, borderGreen, borderBlue, borderAlpha, borderWidth;
 

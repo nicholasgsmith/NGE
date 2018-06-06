@@ -27,4 +27,6 @@
 !NGE_File.h
 !NGE_Entity.cpp
 !NGE_Entity.h
+!NGE_Render.cpp
+!NGE_Render.h
 !NGE.h
