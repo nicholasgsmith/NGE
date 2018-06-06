@@ -54,7 +54,11 @@ public:
 
 	//Creates a new texture which is the given text in the given font, alignment and color
 	//Set the width to 0 for the width to be set to the minimum value for the text to fit on a single line
-	int NGE_CreateText(NGE_Font font, string text, int textureWidth, int lineSpacing, Alignment alignment, GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha);
+	int createText(NGE_Font font, string text, int textureWidth, int lineSpacing, Alignment alignment, GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha);
+
+private:
+	//Renders a line of text onto a texture
+	int renderTextLine(string text, Alignment alignment, int lineStartCharacter, int lineEndCharacter, int textureWidth, int textureHeight, int lineWidth, int currentLine, int lineSpacing, int letterSpacing, int wordLength, NGE_Font& font, GLubyte* alphaTexture);
 
 };
 

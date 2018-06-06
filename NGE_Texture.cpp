@@ -197,7 +197,7 @@ int NGE_Texture::setTextureCanvas(int canvasWidth, int canvasHeight, GLubyte red
 	return 0;
 }
 
-int NGE_Texture::NGE_CreateText(NGE_Font font, string text, int textureWidth, int lineSpacing, Alignment alignment, GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha)
+int NGE_Texture::createText(NGE_Font font, string text, int textureWidth, int lineSpacing, Alignment alignment, GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha)
 {
 	//Confirms that a font was loaded into the font instance
 	if (font.isFontLoaded())
@@ -330,38 +330,7 @@ int NGE_Texture::NGE_CreateText(NGE_Font font, string text, int textureWidth, in
 					carried = false;
 				}
 
-				//We set where to start rendering from based off the alignment of the text
-				int startOfLine = 0;
-				if (alignment == Alignment::left)
-				{
-					startOfLine = 0;
-				}
-				else if (alignment == Alignment::right)
-				{
-					startOfLine = textureWidth - lineWidth;
-				}
-				else if (alignment == Alignment::center)
-				{
-					startOfLine = (textureWidth - lineWidth) / 2;
-				}
-
-				//We render each character of the line
-				characterWidth = 0;
-				for (int j = lineStartCharacter; j != lineEndCharacter; j++)
-				{
-					char charToRender = text.at(j);
-					int charToRenderASCIIValue = static_cast <int> (charToRender);
-					charStart = 0;
-
-					//Each characters data is copied in
-					for (int k = (font.largestYBearing - font.charYBearing[charToRenderASCIIValue]) + ((textureHeight + lineSpacing)*currentLine); k != (font.largestYBearing - font.charYBearing[charToRenderASCIIValue]) + +((textureHeight + lineSpacing)*currentLine) + font.charHeight[charToRenderASCIIValue]; k++)
-					{
-						GLubyte* charBuffer = font.characterData[charToRenderASCIIValue];
-						memcpy(&alphaTexture[(k*textureWidth) + characterWidth + startOfLine + 1], &charBuffer[charStart * font.charWidth[charToRenderASCIIValue]], font.charWidth[charToRenderASCIIValue]);
-						charStart++;
-					}
-					characterWidth += font.charWidth[charToRenderASCIIValue] + letterSpacing;
-				}
+				renderTextLine(text, alignment, lineStartCharacter, lineEndCharacter, textureWidth, textureHeight, lineWidth, currentLine, lineSpacing, letterSpacing, wordLength, font, alphaTexture);
 
 				//If text was carried over then it needs to record the starting width
 				if (carried == true)
@@ -392,40 +361,7 @@ int NGE_Texture::NGE_CreateText(NGE_Font font, string text, int textureWidth, in
 			//In this case we render it now
 			if (carried == true && i + 1 == text.size())
 			{
-				lineEndCharacter = i;
-				int startOfLine = 0;
-
-				//We set the starting position based of the alignment
-				if (alignment == Alignment::left)
-				{
-					startOfLine = 0;
-				}
-				else if (alignment == Alignment::right)
-				{
-					startOfLine = textureWidth - lineWidth - wordLength;
-				}
-				else if (alignment == Alignment::center)
-				{
-					startOfLine = (textureWidth - lineWidth - wordLength) / 2;
-				}
-
-				//We render each character of the word
-				characterWidth = 0;
-				for (int j = lineStartCharacter; j != lineEndCharacter; j++)
-				{
-					char character = text.at(j);
-					int charNumber = static_cast <int> (character);
-					charStart = 0;
-
-					//Each characters data is copied in
-					for (int k = (font.largestYBearing - font.charYBearing[charNumber]) + ((textureHeight + lineSpacing)*currentLine); k != (font.largestYBearing - font.charYBearing[charNumber]) + ((textureHeight + lineSpacing)*currentLine) + font.charHeight[charNumber]; k++)
-					{
-						GLubyte* charBuffer = font.characterData[charNumber];
-						memcpy(&alphaTexture[(k*textureWidth) + characterWidth + startOfLine + 1], &charBuffer[charStart * font.charWidth[charNumber]], font.charWidth[charNumber]);
-						charStart++;
-					}
-					characterWidth += font.charWidth[charNumber] + letterSpacing;
-				}
+				renderTextLine(text, alignment, lineStartCharacter, i, textureWidth, textureHeight, lineWidth, currentLine, lineSpacing, letterSpacing, wordLength, font, alphaTexture);
 			}
 		}
 	}
@@ -456,5 +392,43 @@ int NGE_Texture::NGE_CreateText(NGE_Font font, string text, int textureWidth, in
 	delete[] coloredTexture;
 	delete[] alphaTexture;
 
+	return 0;
+}
+
+int NGE_Texture::renderTextLine(string text, Alignment alignment, int lineStartCharacter, int lineEndCharacter, int textureWidth, int textureHeight, int lineWidth, int currentLine, int lineSpacing, int letterSpacing, int wordLength, NGE_Font& font, GLubyte* alphaTexture)
+{
+	int startOfLine = 0;
+
+	//We set the starting position based of the alignment
+	if (alignment == Alignment::left)
+	{
+		startOfLine = 0;
+	}
+	else if (alignment == Alignment::right)
+	{
+		startOfLine = textureWidth - lineWidth - wordLength;
+	}
+	else if (alignment == Alignment::center)
+	{
+		startOfLine = (textureWidth - lineWidth - wordLength) / 2;
+	}
+
+	//We render each character of the word
+	int characterWidth = 0;
+	for (int j = lineStartCharacter; j != lineEndCharacter; j++)
+	{
+		char character = text.at(j);
+		int charNumber = static_cast <int> (character);
+		int charStart = 0;
+
+		//Each characters data is copied in
+		for (int k = (font.largestYBearing - font.charYBearing[charNumber]) + ((textureHeight + lineSpacing)*currentLine); k != (font.largestYBearing - font.charYBearing[charNumber]) + ((textureHeight + lineSpacing)*currentLine) + font.charHeight[charNumber]; k++)
+		{
+			GLubyte* charBuffer = font.characterData[charNumber];
+			memcpy(&alphaTexture[(k*textureWidth) + characterWidth + startOfLine + 1], &charBuffer[charStart * font.charWidth[charNumber]], font.charWidth[charNumber]);
+			charStart++;
+		}
+		characterWidth += font.charWidth[charNumber] + letterSpacing;
+	}
 	return 0;
 }

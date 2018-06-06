@@ -39,6 +39,7 @@ public:
 
 	//Loads a font with the given textsize from the provided file
 	int loadFont(string file, int textSize);
+
 };
 
 #endif
