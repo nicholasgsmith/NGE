@@ -53,8 +53,12 @@ public:
 	int deleteTexture();
 
 	//Creates a new texture which is the given text in the given font, alignment and color
+	//The font is not changed by this method and can be reused
+	//Any previously loaded texture will be deleted by this method
 	//Set the width to 0 for the width to be set to the minimum value for the text to fit on a single line
-	int createText(NGE_Font font, string text, int textureWidth, int lineSpacing, Alignment alignment, GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha);
+	//Returns -1 if no font has been loaded into the font
+	//Returns -2 if the provided width is too small for some characters or words in the given text
+	int createText(NGE_Font& font, string text, int textureWidth, int lineSpacing, Alignment alignment, GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha);
 
 private:
 	//Renders a line of text onto a texture

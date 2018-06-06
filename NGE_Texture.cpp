@@ -197,7 +197,7 @@ int NGE_Texture::setTextureCanvas(int canvasWidth, int canvasHeight, GLubyte red
 	return 0;
 }
 
-int NGE_Texture::createText(NGE_Font font, string text, int textureWidth, int lineSpacing, Alignment alignment, GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha)
+int NGE_Texture::createText(NGE_Font& font, string text, int textureWidth, int lineSpacing, Alignment alignment, GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha)
 {
 	//Confirms that a font was loaded into the font instance
 	if (font.isFontLoaded())
@@ -205,15 +205,15 @@ int NGE_Texture::createText(NGE_Font font, string text, int textureWidth, int li
 		return -1;
 	}
 
-	//If a texture has already been loaded, it is deleted before we continue
-	deleteTexture();
-
 	//If the width is less than 0 nothing can fit in it
 	//0 is ok, as this signals that we want the program to calulate the width for us
 	if (font.largestWidth > textureWidth + 1 && textureWidth != 0)
 	{
 		return -2;
 	}
+
+	//If a texture has already been loaded, it is deleted before we continue
+	deleteTexture();
 
 	//We add a space at the end so that every word ends in a space for simplicity of later algorithims
 	text.append(" ");
@@ -258,7 +258,7 @@ int NGE_Texture::createText(NGE_Font font, string text, int textureWidth, int li
 				//It checks if the word is smaller than the desired width, else it wont fit
 				if (wordLength - (font.metrics[characterASCIIValue].width / 64 + letterSpacing) >= textureWidth)
 				{
-					return -3;
+					return -2;
 				}
 				else
 				{
