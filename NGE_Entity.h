@@ -24,10 +24,24 @@ protected:
 	int borderRed, borderGreen, borderBlue, borderAlpha, borderWidth;
 
 public:
+
+	//Creates a new, empty instance
 	NGE_Entity();
-	int setBorder(int borderWidth, int red, int green, int blue, int alpha);
+
+	//Assigns the canvas of the entity
+	//This is rendered whenever the entity is rendered
+	//If the entity also has a texture assigned to it, the canvas will be rendered below the texture
+	int setCanvas(int red, int green, int blue, int alpha);
+
+	//Assigns a texture to the entity that will be rendered when you render the entity
 	int assignTexture(NGE_Texture texture, bool setToTextureSize);
+
+	//Sets a border around the entity of the given width and color
+	int setBorder(int borderWidth, int red, int green, int blue, int alpha);
+
+	//Renders the entity onto the openGL model matrix, allowing you to render it to a window
 	int render();
+
 	int setFlip(bool flipped);
 	bool getFlip();
 	int swapFlip();
@@ -50,7 +64,6 @@ public:
 	int changeRotation(int amount);
 	int staticCollision(float* positionData);
 	float* getPositionData();
-	int setCanvas(int red, int green, int blue, int alpha);
 };
 
 #endif

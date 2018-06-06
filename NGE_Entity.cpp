@@ -38,9 +38,21 @@ NGE_Entity::NGE_Entity()
 	positionData[16] = 0;
 }
 
+int NGE_Entity::setCanvas(int red, int green, int blue, int alpha)
+{
+	canvasRed = red;
+	canvasGreen = green;
+	canvasBlue = blue;
+	canvasAlpha = alpha;
+	return 0;
+}
+
 int NGE_Entity::assignTexture(NGE_Texture texture, bool setToTextureSize)
 {
+	//Assigns the internal entity texture to the provided texture
+	//This allows us to use the texture without the texture instance
 	this->texture = *texture.getTextureIDAddress();
+
 	if (setToTextureSize)
 	{
 		changeInPosition = true;
@@ -67,16 +79,19 @@ int NGE_Entity::setBorder(int borderWidth, int red, int green, int blue, int alp
 
 int NGE_Entity::render()
 {
+	//If a canvas, a colored background for the entity, is set render it first so it is behind the texture
 	if (canvasAlpha != 0)
 	{
 		NGE_RenderQuad(centerX, centerY, width, height, rotation, canvasRed, canvasGreen, canvasBlue, canvasAlpha);
 	}
 
+	//Render the texture
 	if (!NGE_RenderTexture(texture, centerX, centerY, width, height, rotation, flipped) == 0)
 	{
 		return -1;
 	}
 
+	//If a border was set render it as 4 rectangles around the entity
 	if (borderWidth != 0)
 	{
 		NGE_RenderQuad(centerX, centerY - (height / 2) - ((borderWidth + 1) / 2), width + (2 * borderWidth), rotation, borderWidth, borderRed, borderGreen, borderBlue, borderAlpha);
