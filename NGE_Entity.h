@@ -43,33 +43,79 @@ public:
 	//Renders the entity onto the openGL model matrix, allowing you to render it to a window
 	int render();
 
+	//Sets the width
 	int setWidth(int width);
+
+	//Returns the width
 	int getWidth();
+
+	//Sets the height
 	int setHeight(int height);
+
+	//Returns the height
 	int getHeight();
+
+	//Returns the width and height
 	int setSides(int width, int height);
+
+	//Increases the width by the given amount
 	int adjustWidth(int amount);
+
+	//Increases the height by the given amount
 	int adjustHeight(int amount);
 
+	//Sets the x value of the center co-ordinate
 	int setCenterX(int centerX);
+
+	//Returns the x value of the center co-ordinate
 	int getCenterX();
+
+	//Sets the y value of the center co-ordinate
 	int setCenterY(int centerY);
+
+	//Returns the y value of the center co-ordinate
 	int getCenterY();
+
+	//Sets the center co-ordinate 
 	int setCenter(int centerX, int centerY);
+
+	//Moves the center co-ordinate in the given direction by the given amount
 	int translate(Direction direction, int amount);
 
+	//Sets the rotation
 	int setRotation(int rotation);
+
+	//Returns the rotation
 	int getRotation();
+
+	//Increases the rotation by the given amount
 	int rotate(int amount);
 
+	//Sets the center co-ordinate, width, height and rotation 
 	int setPosition(int centerX, int centerY, int width, int height, int rotation);
 
+	//Sets whether the entities texture should be flipped before being rendered
+	//Is not reset each time the entity is rendered
 	int setFlip(bool flipped);
+
+	//Returns whether the entities texture is set to be flipped before rendering
 	bool getFlip();
+
+	//Swaps whether the entities texture should be flipped before being rendered to whatever it wasn't
 	int swapFlip();
 
+	//Returns information about the position of the entity for use in other functions
+	//First 8 elements are the rotated co-ordinates of the corners, 2 adjacent elements are x and y co-ordnates respectivly
+	//The next 8 elements are the gradients and y-intercepts of the equations that would run through 2 adjacent corners (the sides of the entity)
+	//2 adjacent elemnets are the gradient and y-intercept respectivly
+	//If the rotation of the entity % 90 == 0 then some gradients will not exist, and so these values may be anything and should not be used, see he final element for the rotation
+	//The final element is the rotation of the entity
 	float* getPositionData();
+
+	//Returns true if the co-ordinate provided would fall inside the entity, false otherwise
 	bool touch(int x, int y);
+
+	//Returns true if the entity given is touching the host entity, false otherwise
 	bool staticCollision(NGE_Entity& collider);
 };
 
