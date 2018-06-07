@@ -13,7 +13,7 @@ class NGE_Entity
 {
 protected:
 	int width, height, centerX, centerY, rotation, cornerCordinates[8], positions[4], rotated[8];
-	bool changeInPosition, flipped;
+	bool changeInPosition, changeInRotation, flipped;
 
 	void calculatePositionData();
 	float positionData[17];
@@ -42,26 +42,32 @@ public:
 	//Renders the entity onto the openGL model matrix, allowing you to render it to a window
 	int render();
 
-	int setFlip(bool flipped);
-	bool getFlip();
-	int swapFlip();
 	int setWidth(int width);
-	int setHeight(int height);
 	int getWidth();
+	int setHeight(int height);
 	int getHeight();
+	int setSides(int width, int height);
+	int adjustWidth(int amount);
+	int adjustHeight(int amount);
+
 	int setCenterX(int centerX);
 	int getCenterX();
 	int setCenterY(int centerY);
 	int getCenterY();
 	int setCenter(int centerX, int centerY);
-	int setPosition(int centerX, int centerY, int width, int height, int rotation);
-	int setSides(int width, int height);
-	int setRotation(int rotation);
 	int translate(Direction direction, int amount);
-	int setSide(Side side, int amount);
+
+	int setRotation(int rotation);
 	int getRotation();
+	int rotate(int amount);
+
+	int setPosition(int centerX, int centerY, int width, int height, int rotation);
+
+	int setFlip(bool flipped);
+	bool getFlip();
+	int swapFlip();
+
 	int touch(int x, int y);
-	int changeRotation(int amount);
 	int staticCollision(float* positionData);
 	float* getPositionData();
 };
