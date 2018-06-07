@@ -13,7 +13,7 @@ enum class Direction { left, right, up, down };
 class NGE_Entity
 {
 protected:
-	int width, height, centerX, centerY, rotation, cornerCordinates[8], positions[4], rotated[8];
+	int width, height, centerX, centerY, rotation, unrotatedCorners[4], cornerCoordinates[8];
 	bool changeInPosition, changeInRotation, flipped;
 
 	void calculatePositionData();

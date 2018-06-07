@@ -24,16 +24,15 @@ NGE_Entity::NGE_Entity()
 	borderBlue = 0;
 	borderRed = 0;
 
-	positions[0] = 0;
-	positions[1] = 0;
-	positions[2] = 0;
-	positions[3] = 0;
+	unrotatedCorners[0] = 0;
+	unrotatedCorners[1] = 0;
+	unrotatedCorners[2] = 0;
+	unrotatedCorners[3] = 0;
 
 	for (int i = 0; i != 8; i++)
 	{
-		cornerCordinates[i] = 0;
+		cornerCoordinates[i] = 0;
 		sideEquations[i] = 0.0;
-		rotated[8] = 0;
 		positionData[i] = 0.0;
 		positionData[i + 8] = 0.0;
 	}
@@ -262,49 +261,49 @@ void NGE_Entity::calculatePositionData()
 {
 	if (changeInPosition)
 	{
-		positions[0] = centerX - (width / 2);
-		positions[1] = centerY - (height / 2);
-		positions[2] = centerX + (width / 2);
-		positions[3] = centerY + (height / 2);
+		unrotatedCorners[0] = centerX - (width / 2);
+		unrotatedCorners[1] = centerY - (height / 2);
+		unrotatedCorners[2] = centerX + (width / 2);
+		unrotatedCorners[3] = centerY + (height / 2);
 	}
 
 	if (changeInPosition || changeInRotation)
 	{
 		if (rotation == 0)
 		{
-			rotated[0] = positions[0];
-			rotated[1] = positions[1];
-			rotated[2] = positions[0];
-			rotated[3] = positions[3];
-			rotated[4] = positions[2];
-			rotated[5] = positions[3];
-			rotated[6] = positions[2];
-			rotated[7] = positions[1];
+			cornerCoordinates[0] = unrotatedCorners[0];
+			cornerCoordinates[1] = unrotatedCorners[1];
+			cornerCoordinates[2] = unrotatedCorners[0];
+			cornerCoordinates[3] = unrotatedCorners[3];
+			cornerCoordinates[4] = unrotatedCorners[2];
+			cornerCoordinates[5] = unrotatedCorners[3];
+			cornerCoordinates[6] = unrotatedCorners[2];
+			cornerCoordinates[7] = unrotatedCorners[1];
 		}
 		else
 		{
 			double cosValue = cos(RADIANS(rotation));
 			double sinValue = sin(RADIANS(rotation));
-			rotated[0] = (int)((positions[0] - centerX)*cosValue - ((positions[1] - centerY)*sinValue)) + centerX;
-			rotated[1] = (int)((positions[0] - centerX)*sinValue + ((positions[1] - centerY)*cosValue)) + centerY;
-			rotated[2] = (int)((positions[0] - centerX)*cosValue - ((positions[3] - centerY)*sinValue)) + centerX;
-			rotated[3] = (int)((positions[0] - centerX)*sinValue + ((positions[3] - centerY)*cosValue)) + centerY;
-			rotated[4] = (int)((positions[2] - centerX)*cosValue - ((positions[3] - centerY)*sinValue)) + centerX;
-			rotated[5] = (int)((positions[2] - centerX)*sinValue + ((positions[3] - centerY)*cosValue)) + centerY;
-			rotated[6] = (int)((positions[2] - centerX)*cosValue - ((positions[1] - centerY)*sinValue)) + centerX;
-			rotated[7] = (int)((positions[2] - centerX)*sinValue + ((positions[1] - centerY)*cosValue)) + centerY;
+			cornerCoordinates[0] = (int)((unrotatedCorners[0] - centerX)*cosValue - ((unrotatedCorners[1] - centerY)*sinValue)) + centerX;
+			cornerCoordinates[1] = (int)((unrotatedCorners[0] - centerX)*sinValue + ((unrotatedCorners[1] - centerY)*cosValue)) + centerY;
+			cornerCoordinates[2] = (int)((unrotatedCorners[0] - centerX)*cosValue - ((unrotatedCorners[3] - centerY)*sinValue)) + centerX;
+			cornerCoordinates[3] = (int)((unrotatedCorners[0] - centerX)*sinValue + ((unrotatedCorners[3] - centerY)*cosValue)) + centerY;
+			cornerCoordinates[4] = (int)((unrotatedCorners[2] - centerX)*cosValue - ((unrotatedCorners[3] - centerY)*sinValue)) + centerX;
+			cornerCoordinates[5] = (int)((unrotatedCorners[2] - centerX)*sinValue + ((unrotatedCorners[3] - centerY)*cosValue)) + centerY;
+			cornerCoordinates[6] = (int)((unrotatedCorners[2] - centerX)*cosValue - ((unrotatedCorners[1] - centerY)*sinValue)) + centerX;
+			cornerCoordinates[7] = (int)((unrotatedCorners[2] - centerX)*sinValue + ((unrotatedCorners[1] - centerY)*cosValue)) + centerY;
 		}
 
 		if (rotation % 90 != 0)
 		{
-			sideEquations[0] = ((float) rotated[1] - rotated[7]) / (rotated[0] - rotated[6]);
+			sideEquations[0] = ((float) cornerCoordinates[1] - cornerCoordinates[7]) / (cornerCoordinates[0] - cornerCoordinates[6]);
 			sideEquations[4] = sideEquations[0];
-			sideEquations[2] = ((float) rotated[1] - rotated[3]) / (rotated[0] - rotated[2]);
+			sideEquations[2] = ((float) cornerCoordinates[1] - cornerCoordinates[3]) / (cornerCoordinates[0] - cornerCoordinates[2]);
 			sideEquations[6] = sideEquations[2];
-			sideEquations[1] = rotated[1] - (sideEquations[0] * rotated[0]);
-			sideEquations[3] = rotated[1] - (sideEquations[2] * rotated[0]);
-			sideEquations[5] = rotated[5] - (sideEquations[4] * rotated[4]);
-			sideEquations[7] = rotated[5] - (sideEquations[6] * rotated[4]);
+			sideEquations[1] = cornerCoordinates[1] - (sideEquations[0] * cornerCoordinates[0]);
+			sideEquations[3] = cornerCoordinates[1] - (sideEquations[2] * cornerCoordinates[0]);
+			sideEquations[5] = cornerCoordinates[5] - (sideEquations[4] * cornerCoordinates[4]);
+			sideEquations[7] = cornerCoordinates[5] - (sideEquations[6] * cornerCoordinates[4]);
 		}
 	}
 
@@ -320,7 +319,7 @@ float* NGE_Entity::getPositionData()
 
 	for (i = 0; i != 8; i++)
 	{
-		positionData[i] = (float)rotated[i];
+		positionData[i] = (float)cornerCoordinates[i];
 	}
 
 	for (i = 8; i != 16; i++)
@@ -340,25 +339,25 @@ bool NGE_Entity::touch(int x, int y)
 	switch (rotation)
 	{
 		case 0:
-			if (((x > rotated[0]) && (x < rotated[4]) && (y > rotated[1]) && (y < rotated[5])))
+			if (((x > cornerCoordinates[0]) && (x < cornerCoordinates[4]) && (y > cornerCoordinates[1]) && (y < cornerCoordinates[5])))
 			{
 				return true;
 			}
 			break;
 		case 180:
-			if (((x > rotated[4]) && (x < rotated[0]) && (y > rotated[5]) && (y < rotated[1])))
+			if (((x > cornerCoordinates[4]) && (x < cornerCoordinates[0]) && (y > cornerCoordinates[5]) && (y < cornerCoordinates[1])))
 			{
 				return true;
 			}
 			break;
 		case 90:
-			if (((x > rotated[4]) && (x < rotated[0]) && (y > rotated[1]) && (y < rotated[5])))
+			if (((x > cornerCoordinates[4]) && (x < cornerCoordinates[0]) && (y > cornerCoordinates[1]) && (y < cornerCoordinates[5])))
 			{
 				return 1;
 			}
 			break;
 		case 270:
-			if (((x > rotated[0]) && (x < rotated[4]) && (y > rotated[5]) && (y < rotated[1])))
+			if (((x > cornerCoordinates[0]) && (x < cornerCoordinates[4]) && (y > cornerCoordinates[5]) && (y < cornerCoordinates[1])))
 			{
 				return true;
 			}
