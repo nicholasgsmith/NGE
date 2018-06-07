@@ -113,9 +113,11 @@ public:
 	float* getPositionData();
 
 	//Returns true if the co-ordinate provided would fall inside the entity, false otherwise
+	//This only returns true if the point is strictly within the entity, on the edge of the entity ,e.g. directly on one of its sides, is not accepted
 	bool touch(int x, int y);
 
 	//Returns true if the entity given is touching the host entity, false otherwise
+	//This only returns true if the entites are strictly touching, on the edge of touching ,e.g. one entites corner is on the others side, is not accepted
 	bool staticCollision(NGE_Entity& collider);
 };
 
