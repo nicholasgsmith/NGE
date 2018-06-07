@@ -394,6 +394,50 @@ bool NGE_Entity::touch(int x, int y)
 			}
 			break;
 	}
+
 	return false;
 }
 
+bool NGE_Entity::staticCollision(NGE_Entity& collider)
+{
+	float* colliderData = collider.getPositionData();
+	
+	calculatePositionData();
+
+	if (touch((int)colliderData[0], (int)colliderData[1]))
+	{
+		return true;
+	}
+	else if (touch((int)colliderData[2], (int)colliderData[3]))
+	{
+		return true;
+	}
+	else if (touch((int)colliderData[4], (int)colliderData[5]))
+	{
+		return true;
+	}
+	else if (touch((int)colliderData[6], (int)colliderData[7]))
+	{
+		return true;
+	}
+	else if (collider.touch((int)positionData[0], (int)positionData[1]))
+	{
+		return true;
+	}
+	else if (collider.touch((int)positionData[2], (int)positionData[3]))
+	{
+		return true;
+	}
+	else if (collider.touch((int)positionData[4], (int)positionData[5]))
+	{
+		return true;
+	}
+	else if (collider.touch((int)positionData[6], (int)positionData[7]))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}

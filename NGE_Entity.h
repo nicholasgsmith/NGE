@@ -70,7 +70,7 @@ public:
 
 	float* getPositionData();
 	bool touch(int x, int y);
-	int staticCollision(NGE_Entity& collider);
+	bool staticCollision(NGE_Entity& collider);
 };
 
 #endif
