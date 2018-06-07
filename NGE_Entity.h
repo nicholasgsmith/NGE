@@ -5,6 +5,7 @@ using namespace std;
 #include "NGE_Master.h"
 #include "NGE_Texture.h"
 #include "NGE_Render.h"
+#include "NGE_Maths.h"
 
 enum class Side { width, height };
 enum class Direction { left, right, up, down };

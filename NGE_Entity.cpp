@@ -207,6 +207,7 @@ int NGE_Entity::setRotation(int rotation)
 {
 	changeInRotation = true;
 	rotation = rotation;
+	rotation %= 360;
 	return 0;
 }
 
@@ -219,6 +220,7 @@ int NGE_Entity::rotate(int amount)
 {
 	changeInRotation = true;
 	rotation += amount;
+	rotation %= 360;
 	return 0;
 }
 
@@ -254,5 +256,80 @@ int NGE_Entity::swapFlip()
 		flipped = true;
 	}
 	return 0;
+}
+
+void NGE_Entity::calculatePositionData()
+{
+	if (changeInPosition)
+	{
+		positions[0] = centerX - (width / 2);
+		positions[1] = centerY - (height / 2);
+		positions[2] = centerX + (width / 2);
+		positions[3] = centerY + (height / 2);
+	}
+
+	if (changeInPosition || changeInRotation)
+	{
+		if (rotation == 0)
+		{
+			rotated[0] = positions[0];
+			rotated[1] = positions[1];
+			rotated[2] = positions[0];
+			rotated[3] = positions[3];
+			rotated[4] = positions[2];
+			rotated[5] = positions[3];
+			rotated[6] = positions[2];
+			rotated[7] = positions[1];
+		}
+		else
+		{
+			double cosValue = cos(RADIANS(rotation));
+			double sinValue = sin(RADIANS(rotation));
+			rotated[0] = ((positions[0] - centerX)*cosValue - ((positions[1] - centerY)*sinValue)) + centerX;
+			rotated[1] = ((positions[0] - centerX)*sinValue + ((positions[1] - centerY)*cosValue)) + centerY;
+			rotated[2] = ((positions[0] - centerX)*cosValue - ((positions[3] - centerY)*sinValue)) + centerX;
+			rotated[3] = ((positions[0] - centerX)*sinValue + ((positions[3] - centerY)*cosValue)) + centerY;
+			rotated[4] = ((positions[2] - centerX)*cosValue - ((positions[3] - centerY)*sinValue)) + centerX;
+			rotated[5] = ((positions[2] - centerX)*sinValue + ((positions[3] - centerY)*cosValue)) + centerY;
+			rotated[6] = ((positions[2] - centerX)*cosValue - ((positions[1] - centerY)*sinValue)) + centerX;
+			rotated[7] = ((positions[2] - centerX)*sinValue + ((positions[1] - centerY)*cosValue)) + centerY;
+		}
+
+		if (rotation % 90 != 0)
+		{
+			sideEquations[0] = ((float) rotated[1] - rotated[7]) / (rotated[0] - rotated[6]);
+			sideEquations[4] = sideEquations[0];
+			sideEquations[2] = ((float) rotated[1] - rotated[3]) / (rotated[0] - rotated[2]);
+			sideEquations[6] = sideEquations[2];
+			sideEquations[1] = rotated[1] - (sideEquations[0] * rotated[0]);
+			sideEquations[3] = rotated[1] - (sideEquations[2] * rotated[0]);
+			sideEquations[5] = rotated[5] - (sideEquations[4] * rotated[4]);
+			sideEquations[7] = rotated[5] - (sideEquations[6] * rotated[4]);
+		}
+	}
+
+	changeInRotation = false;
+	changeInPosition = false;
+}
+
+float* NGE_Entity::getPositionData()
+{
+	calculatePositionData();
+
+	int i = 0;
+
+	for (i = 0; i != 8; i++)
+	{
+		positionData[i] = rotated[i];
+	}
+
+	for (i = 8; i != 16; i++)
+	{
+		positionData[i] = sideEquations[i - 8];
+	}
+
+	positionData[16] = rotation;
+
+	return positionData;
 }
 
