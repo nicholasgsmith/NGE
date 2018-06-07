@@ -285,14 +285,14 @@ void NGE_Entity::calculatePositionData()
 		{
 			double cosValue = cos(RADIANS(rotation));
 			double sinValue = sin(RADIANS(rotation));
-			rotated[0] = ((positions[0] - centerX)*cosValue - ((positions[1] - centerY)*sinValue)) + centerX;
-			rotated[1] = ((positions[0] - centerX)*sinValue + ((positions[1] - centerY)*cosValue)) + centerY;
-			rotated[2] = ((positions[0] - centerX)*cosValue - ((positions[3] - centerY)*sinValue)) + centerX;
-			rotated[3] = ((positions[0] - centerX)*sinValue + ((positions[3] - centerY)*cosValue)) + centerY;
-			rotated[4] = ((positions[2] - centerX)*cosValue - ((positions[3] - centerY)*sinValue)) + centerX;
-			rotated[5] = ((positions[2] - centerX)*sinValue + ((positions[3] - centerY)*cosValue)) + centerY;
-			rotated[6] = ((positions[2] - centerX)*cosValue - ((positions[1] - centerY)*sinValue)) + centerX;
-			rotated[7] = ((positions[2] - centerX)*sinValue + ((positions[1] - centerY)*cosValue)) + centerY;
+			rotated[0] = (int)((positions[0] - centerX)*cosValue - ((positions[1] - centerY)*sinValue)) + centerX;
+			rotated[1] = (int)((positions[0] - centerX)*sinValue + ((positions[1] - centerY)*cosValue)) + centerY;
+			rotated[2] = (int)((positions[0] - centerX)*cosValue - ((positions[3] - centerY)*sinValue)) + centerX;
+			rotated[3] = (int)((positions[0] - centerX)*sinValue + ((positions[3] - centerY)*cosValue)) + centerY;
+			rotated[4] = (int)((positions[2] - centerX)*cosValue - ((positions[3] - centerY)*sinValue)) + centerX;
+			rotated[5] = (int)((positions[2] - centerX)*sinValue + ((positions[3] - centerY)*cosValue)) + centerY;
+			rotated[6] = (int)((positions[2] - centerX)*cosValue - ((positions[1] - centerY)*sinValue)) + centerX;
+			rotated[7] = (int)((positions[2] - centerX)*sinValue + ((positions[1] - centerY)*cosValue)) + centerY;
 		}
 
 		if (rotation % 90 != 0)
@@ -320,7 +320,7 @@ float* NGE_Entity::getPositionData()
 
 	for (i = 0; i != 8; i++)
 	{
-		positionData[i] = rotated[i];
+		positionData[i] = (float)rotated[i];
 	}
 
 	for (i = 8; i != 16; i++)
@@ -328,8 +328,72 @@ float* NGE_Entity::getPositionData()
 		positionData[i] = sideEquations[i - 8];
 	}
 
-	positionData[16] = rotation;
+	positionData[16] = (float)rotation;
 
 	return positionData;
+}
+
+bool NGE_Entity::touch(int x, int y)
+{
+	calculatePositionData();
+
+	switch (rotation)
+	{
+		case 0:
+			if (((x > rotated[0]) && (x < rotated[4]) && (y > rotated[1]) && (y < rotated[5])))
+			{
+				return true;
+			}
+			break;
+		case 180:
+			if (((x > rotated[4]) && (x < rotated[0]) && (y > rotated[5]) && (y < rotated[1])))
+			{
+				return true;
+			}
+			break;
+		case 90:
+			if (((x > rotated[4]) && (x < rotated[0]) && (y > rotated[1]) && (y < rotated[5])))
+			{
+				return 1;
+			}
+			break;
+		case 270:
+			if (((x > rotated[0]) && (x < rotated[4]) && (y > rotated[5]) && (y < rotated[1])))
+			{
+				return true;
+			}
+			break;
+		default:
+			if (rotation > 0 && rotation < 90)
+			{
+				if ((sideEquations[0] * x) + sideEquations[1] < y && (sideEquations[2] * x) + sideEquations[3] < y && (sideEquations[4] * x) + sideEquations[5] > y && (sideEquations[6] * x) + sideEquations[7] > y)
+				{
+					return true;
+				}
+			}
+			else if (rotation > 90 && rotation < 180)
+			{
+				if ((sideEquations[0] * x) + sideEquations[1] > y && (sideEquations[2] * x) + sideEquations[3] < y && (sideEquations[4] * x) + sideEquations[5] < y && (sideEquations[6] * x) + sideEquations[7] > y)
+				{
+					return true;
+				}
+			}
+			else if (rotation > 180 && rotation < 270)
+			{
+				if ((sideEquations[0] * x) + sideEquations[1] > y && (sideEquations[2] * x) + sideEquations[3] > y && (sideEquations[4] * x) + sideEquations[5] < y && (sideEquations[6] * x) + sideEquations[7] < y)
+				{
+					return true;
+				}
+			}
+			else if (rotation > 270 && rotation < 360)
+			{
+				if ((sideEquations[0] * x) + sideEquations[1] < y && (sideEquations[2] * x) + sideEquations[3] > y && (sideEquations[4] * x) + sideEquations[5] > y && (sideEquations[6] * x) + sideEquations[7] < y)
+				{
+					return true;
+				}
+			}
+			break;
+	}
+	return false;
 }
 

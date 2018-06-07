@@ -68,9 +68,9 @@ public:
 	bool getFlip();
 	int swapFlip();
 
-	int touch(int x, int y);
-	int staticCollision(float* positionData);
 	float* getPositionData();
+	bool touch(int x, int y);
+	int staticCollision(NGE_Entity& collider);
 };
 
 #endif
