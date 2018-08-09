@@ -41,7 +41,7 @@ NGE_Entity::NGE_Entity()
 	subShapes.clear();
 }
 
-int NGE_Entity::setCanvas(int red, int green, int blue, int alpha)
+int NGE_Entity::setCanvas(int red, int green, int blue, int alpha, bool adjustSubShapes)
 {
 	canvasRed = red;
 	canvasGreen = green;
@@ -50,7 +50,7 @@ int NGE_Entity::setCanvas(int red, int green, int blue, int alpha)
 	return 0;
 }
 
-int NGE_Entity::assignTexture(NGE_Texture texture, bool setToTextureSize)
+int NGE_Entity::assignTexture(NGE_Texture texture, bool setToTextureSize, bool adjustSubShapes)
 {
 	//Assigns the internal entity texture to the provided texture
 	//This allows us to use the texture without the texture instance
@@ -65,7 +65,7 @@ int NGE_Entity::assignTexture(NGE_Texture texture, bool setToTextureSize)
 	return 0;
 }
 
-int NGE_Entity::setBorder(int borderWidth, int red, int green, int blue, int alpha)
+int NGE_Entity::setBorder(int borderWidth, int red, int green, int blue, int alpha, bool adjustSubShapes)
 {
 	if (borderWidth < 0)
 	{
@@ -80,7 +80,7 @@ int NGE_Entity::setBorder(int borderWidth, int red, int green, int blue, int alp
 	return 0;
 }
 
-int NGE_Entity::render()
+int NGE_Entity::render(bool applyToSubShapes)
 {
 	//If a canvas, a colored background for the entity, is set render it first so it is behind the texture
 	if (canvasAlpha != 0)
@@ -106,7 +106,7 @@ int NGE_Entity::render()
 	return 0;
 }
 
-int NGE_Entity::setWidth(int width)
+int NGE_Entity::setWidth(int width, bool adjustSubShapes)
 {
 	width = width;
 	changeInPosition = true;
@@ -118,7 +118,7 @@ int NGE_Entity::getWidth()
 	return width;
 }
 
-int NGE_Entity::setHeight(int height)
+int NGE_Entity::setHeight(int height, bool adjustSubShapes)
 {
 	height = height;
 	changeInPosition = true;
@@ -130,28 +130,28 @@ int NGE_Entity::getHeight()
 	return height;
 }
 
-int NGE_Entity::setSides(int width, int height)
+int NGE_Entity::setSides(int width, int height, bool adjustSubShapes)
 {
-	setHeight(height);
-	setWidth(width);
+	setHeight(height, adjustSubShapes);
+	setWidth(width, adjustSubShapes);
 	return 0;
 }
 
-int NGE_Entity::adjustWidth(int amount)
+int NGE_Entity::adjustWidth(int amount, bool adjustSubShapes)
 {
 	changeInPosition = true;
 	width = amount;
 	return 0;
 }
 
-int NGE_Entity::adjustHeight(int amount)
+int NGE_Entity::adjustHeight(int amount, bool adjustSubShapes)
 {
 	changeInPosition = true;
 	height = amount;
 	return 0;
 }
 
-int NGE_Entity::setCenterX(int centerX)
+int NGE_Entity::setCenterX(int centerX, bool adjustSubShapes)
 {
 	changeInPosition = true;
 	centerX = centerX;
@@ -163,7 +163,7 @@ int NGE_Entity::getCenterX()
 	return centerX;
 }
 
-int NGE_Entity::setCenterY(int centerY)
+int NGE_Entity::setCenterY(int centerY, bool adjustSubShapes)
 {
 	changeInPosition = true;
 	centerY = centerY;
@@ -175,14 +175,14 @@ int NGE_Entity::getCenterY()
 	return centerY;
 }
 
-int NGE_Entity::setCenter(int centerX, int centerY)
+int NGE_Entity::setCenter(int centerX, int centerY, bool adjustSubShapes)
 {
-	setCenterX(centerX);
-	setCenterY(centerY);
+	setCenterX(centerX, adjustSubShapes);
+	setCenterY(centerY, adjustSubShapes);
 	return 0;
 }
 
-int NGE_Entity::translate(Direction direction, int amount)
+int NGE_Entity::translate(Direction direction, int amount, bool adjustSubShapes)
 {
 	changeInPosition = true;
 
@@ -206,7 +206,7 @@ int NGE_Entity::translate(Direction direction, int amount)
 	return 0;
 }
 
-int NGE_Entity::setRotation(int rotation)
+int NGE_Entity::setRotation(int rotation, bool adjustSubShapes)
 {
 	changeInRotation = true;
 	rotation = rotation;
@@ -221,7 +221,7 @@ int NGE_Entity::getRotation()
 	return rotation;
 }
 
-int NGE_Entity::rotate(int amount)
+int NGE_Entity::rotate(int amount, bool adjustSubShapes)
 {
 	changeInRotation = true;
 	rotation += amount;
@@ -231,17 +231,17 @@ int NGE_Entity::rotate(int amount)
 	return 0;
 }
 
-int NGE_Entity::setPosition(int centerX, int centerY, int width, int height, int rotation)
+int NGE_Entity::setPosition(int centerX, int centerY, int width, int height, int rotation, bool adjustSubShapes)
 {
-	setCenterX(centerX);
-	setCenterY(centerY);
-	setRotation(rotation);
-	setHeight(height);
-	setWidth(width);
+	setCenterX(centerX, adjustSubShapes);
+	setCenterY(centerY, adjustSubShapes);
+	setRotation(rotation, adjustSubShapes);
+	setHeight(height, adjustSubShapes);
+	setWidth(width, adjustSubShapes);
 	return 0;
 }
 
-int NGE_Entity::setFlip(bool flipped)
+int NGE_Entity::setFlip(bool flipped, bool adjustSubShapes)
 {
 	flipped = flipped;
 	return 0;
@@ -252,7 +252,7 @@ bool NGE_Entity::getFlip()
 	return flipped;
 }
 
-int NGE_Entity::swapFlip()
+int NGE_Entity::swapFlip(bool adjustSubShapes)
 {
 	if (flipped)
 	{
@@ -359,7 +359,7 @@ float* NGE_Entity::getPositionData()
 	return positionData;
 }
 
-bool NGE_Entity::touch(int x, int y)
+bool NGE_Entity::touch(int x, int y, bool includeSubShapes)
 {
 	//Ensure entity data is up-to-date
 	calculatePositionData();
@@ -429,7 +429,7 @@ bool NGE_Entity::touch(int x, int y)
 	return false;
 }
 
-bool NGE_Entity::staticCollision(NGE_Entity& collider)
+bool NGE_Entity::staticCollision(NGE_Entity& collider, bool includeSubShapes)
 {
 	//Obtain the poisition data of the other entity
 	float* colliderData = collider.getPositionData();
@@ -442,35 +442,35 @@ bool NGE_Entity::staticCollision(NGE_Entity& collider)
 	//This is all we do, as since they are both rectangles, they are touching if at least 1 of their corners is inside or touching the other
 	//The exception of the above is if 1 is streched through the other, but we do not test for this as it adds too much overhead and is too niche a senario
 	//If we ever hit a corner, we dont care about the other corners and just return true, as we dont care how much they are touching by
-	if (touch((int)colliderData[0], (int)colliderData[1]))
+	if (touch((int)colliderData[0], (int)colliderData[1], includeSubShapes))
 	{
 		return true;
 	}
-	else if (touch((int)colliderData[2], (int)colliderData[3]))
+	else if (touch((int)colliderData[2], (int)colliderData[3], includeSubShapes))
 	{
 		return true;
 	}
-	else if (touch((int)colliderData[4], (int)colliderData[5]))
+	else if (touch((int)colliderData[4], (int)colliderData[5], includeSubShapes))
 	{
 		return true;
 	}
-	else if (touch((int)colliderData[6], (int)colliderData[7]))
+	else if (touch((int)colliderData[6], (int)colliderData[7], includeSubShapes))
 	{
 		return true;
 	}
-	else if (collider.touch((int)positionData[0], (int)positionData[1]))
+	else if (collider.touch((int)positionData[0], (int)positionData[1], includeSubShapes))
 	{
 		return true;
 	}
-	else if (collider.touch((int)positionData[2], (int)positionData[3]))
+	else if (collider.touch((int)positionData[2], (int)positionData[3], includeSubShapes))
 	{
 		return true;
 	}
-	else if (collider.touch((int)positionData[4], (int)positionData[5]))
+	else if (collider.touch((int)positionData[4], (int)positionData[5], includeSubShapes))
 	{
 		return true;
 	}
-	else if (collider.touch((int)positionData[6], (int)positionData[7]))
+	else if (collider.touch((int)positionData[6], (int)positionData[7], includeSubShapes))
 	{
 		return true;
 	}
