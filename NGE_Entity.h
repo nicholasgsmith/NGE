@@ -41,7 +41,7 @@ public:
 
 	//Deletes a given sub-shape
 	//Bear in mind this will adjust the position of other sub-shapes within the vector
-	int deleteSubShape(int index);
+	int deleteSubShape(unsigned int index);
 
 	//Assigns the canvas of the entity
 	//This is rendered whenever the entity is rendered
