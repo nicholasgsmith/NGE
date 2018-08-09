@@ -41,6 +41,39 @@ NGE_Entity::NGE_Entity()
 	subShapes.clear();
 }
 
+int NGE_Entity::pushSubShape()
+{
+	//Create and store new entity
+	NGE_Entity* entity = new NGE_Entity;
+	subShapes.push_back(entity);
+	return 0;
+}
+
+int NGE_Entity::popSubShape()
+{
+	//Get last subshape
+	int lastSubShape = subShapes.size() - 1;
+
+	//Deallocate its memory and remove it
+	delete subShapes[lastSubShape];
+	subShapes.pop_back();
+	return 0;
+}
+
+int NGE_Entity::deleteSubShape(int index)
+{
+	//Confirm index exists
+	if (index >= subShapes.size() || index < 0)
+	{
+		return -1;
+	}
+
+	//Deallocate entity's memory and remove it
+	delete subShapes[index];
+	subShapes.erase(subShapes.begin()+index+1);
+	return 0;
+}
+
 int NGE_Entity::setCanvas(int red, int green, int blue, int alpha, bool adjustSubShapes)
 {
 	canvasRed = red;
