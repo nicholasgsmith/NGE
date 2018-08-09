@@ -6,6 +6,7 @@ using namespace std;
 #include "NGE_Texture.h"
 #include "NGE_Render.h"
 #include "NGE_Maths.h"
+#include <vector>
 
 enum class Side { width, height };
 enum class Direction { left, right, up, down };
@@ -23,6 +24,8 @@ protected:
 	GLuint texture;
 	int canvasAlpha, canvasBlue, canvasGreen, canvasRed;
 	int borderRed, borderGreen, borderBlue, borderAlpha, borderWidth;
+
+	vector<NGE_Entity*> subShapes;
 
 public:
 

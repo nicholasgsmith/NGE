@@ -37,6 +37,8 @@ NGE_Entity::NGE_Entity()
 		positionData[i + 8] = 0.0;
 	}
 	positionData[16] = 0;
+
+	subShapes.clear();
 }
 
 int NGE_Entity::setCanvas(int red, int green, int blue, int alpha)
