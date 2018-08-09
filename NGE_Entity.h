@@ -25,12 +25,23 @@ protected:
 	int canvasAlpha, canvasBlue, canvasGreen, canvasRed;
 	int borderRed, borderGreen, borderBlue, borderAlpha, borderWidth;
 
-	vector<NGE_Entity*> subShapes;
-
 public:
+
+	vector<NGE_Entity*> subShapes;
 
 	//Creates a new, empty instance
 	NGE_Entity();
+
+	//Adds a new sub-shape to the shape
+	//New shape is added to the end of the sub-shape vector
+	int pushSubShape();
+
+	//Deletes a sub-shape from the end of the sub-shape vector
+	int popSubShape();
+
+	//Deletes a given sub-shape
+	//Bear in mind this will adjust the position of other sub-shapes within the vector
+	int deleteSubShape(int index);
 
 	//Assigns the canvas of the entity
 	//This is rendered whenever the entity is rendered

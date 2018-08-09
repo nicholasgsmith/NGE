@@ -47,6 +47,7 @@ int NGE_Entity::setCanvas(int red, int green, int blue, int alpha, bool adjustSu
 	canvasGreen = green;
 	canvasBlue = blue;
 	canvasAlpha = alpha;
+
 	return 0;
 }
 
