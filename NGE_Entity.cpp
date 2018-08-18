@@ -654,7 +654,7 @@ bool NGE_Entity::touch(int x, int y, bool includeSubShapes)
 	return false;
 }
 
-bool NGE_Entity::staticCollision(NGE_Entity& collider, bool includeSubShapes)
+bool NGE_Entity::staticCollision(NGE_Entity& collider, bool includeHostSubShapes, bool includeColliderSubShapes)
 {
 	//Obtain the poisition data of the other entity
 	float* colliderData = collider.getPositionData();
@@ -667,45 +667,45 @@ bool NGE_Entity::staticCollision(NGE_Entity& collider, bool includeSubShapes)
 	//This is all we do, as since they are both rectangles, they are touching if at least 1 of their corners is inside or touching the other
 	//The exception of the above is if 1 is streched through the other, but we do not test for this as it adds too much overhead and is too niche a senario
 	//If we ever hit a corner, we dont care about the other corners and just return true, as we dont care how much they are touching by
-	if (touch((int)colliderData[0], (int)colliderData[1], includeSubShapes))
+	if (touch((int)colliderData[0], (int)colliderData[1], includeHostSubShapes))
 	{
 		return true;
 	}
-	else if (touch((int)colliderData[2], (int)colliderData[3], includeSubShapes))
+	else if (touch((int)colliderData[2], (int)colliderData[3], includeHostSubShapes))
 	{
 		return true;
 	}
-	else if (touch((int)colliderData[4], (int)colliderData[5], includeSubShapes))
+	else if (touch((int)colliderData[4], (int)colliderData[5], includeHostSubShapes))
 	{
 		return true;
 	}
-	else if (touch((int)colliderData[6], (int)colliderData[7], includeSubShapes))
+	else if (touch((int)colliderData[6], (int)colliderData[7], includeHostSubShapes))
 	{
 		return true;
 	}
-	else if (collider.touch((int)positionData[0], (int)positionData[1], includeSubShapes))
+	else if (collider.touch((int)positionData[0], (int)positionData[1], includeHostSubShapes))
 	{
 		return true;
 	}
-	else if (collider.touch((int)positionData[2], (int)positionData[3], includeSubShapes))
+	else if (collider.touch((int)positionData[2], (int)positionData[3], includeHostSubShapes))
 	{
 		return true;
 	}
-	else if (collider.touch((int)positionData[4], (int)positionData[5], includeSubShapes))
+	else if (collider.touch((int)positionData[4], (int)positionData[5], includeHostSubShapes))
 	{
 		return true;
 	}
-	else if (collider.touch((int)positionData[6], (int)positionData[7], includeSubShapes))
+	else if (collider.touch((int)positionData[6], (int)positionData[7], includeHostSubShapes))
 	{
 		return true;
 	}
 	else
 	{
-		if (includeSubShapes)
+		if (includeColliderSubShapes)
 		{
-			for (int i = 0; i != subShapes.size(); i++)
+			for (int i = 0; i != collider.subShapes.size(); i++)
 			{
-				if (subShapes[i]->staticCollision(collider, includeSubShapes))
+				if (this->staticCollision(*(collider.subShapes[i]), includeHostSubShapes, includeColliderSubShapes))
 				{
 					return true;
 				}

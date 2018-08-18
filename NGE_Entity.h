@@ -132,7 +132,7 @@ public:
 
 	//Returns true if the entity given is touching the host entity, false otherwise
 	//This only returns true if the entites are strictly touching, on the edge of touching ,e.g. one entites corner is on the others side, is not accepted
-	bool staticCollision(NGE_Entity& collider, bool includeSubShapes);
+	bool staticCollision(NGE_Entity& collider, bool includeHostSubShapes, bool includeColliderSubShapes);
 };
 
 #endif
