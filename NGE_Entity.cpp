@@ -565,6 +565,14 @@ bool NGE_Entity::touch(int x, int y, bool includeSubShapes)
 			break;
 	}
 
+	for (int i = 0; i != subShapes.size(); i++)
+	{
+		if (subShapes[i]->touch(x, y, includeSubShapes))
+		{
+			return true;
+		}
+	}
+
 	return false;
 }
 
@@ -615,6 +623,14 @@ bool NGE_Entity::staticCollision(NGE_Entity& collider, bool includeSubShapes)
 	}
 	else
 	{
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			if (subShapes[i]->staticCollision(collider, includeSubShapes))
+			{
+				return true;
+			}
+		}
+
 		return false;
 	}
 }
