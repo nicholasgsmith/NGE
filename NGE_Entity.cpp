@@ -81,9 +81,12 @@ int NGE_Entity::setCanvas(int red, int green, int blue, int alpha, bool adjustSu
 	canvasBlue = blue;
 	canvasAlpha = alpha;
 
-	for (int i = 0; i != subShapes.size(); i++)
+	if (adjustSubShapes)
 	{
-		subShapes[i]->setCanvas(red, green, blue, alpha, adjustSubShapes);
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->setCanvas(red, green, blue, alpha, adjustSubShapes);
+		}
 	}
 
 	return 0;
@@ -102,9 +105,12 @@ int NGE_Entity::assignTexture(NGE_Texture texture, bool setToTextureSize, bool a
 		height = texture.getHeight();
 	}
 
-	for (int i = 0; i != subShapes.size(); i++)
+	if (adjustSubShapes)
 	{
-		subShapes[i]->assignTexture(texture, setToTextureSize, adjustSubShapes);
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->assignTexture(texture, setToTextureSize, adjustSubShapes);
+		}
 	}
 
 	return 0;
@@ -123,9 +129,12 @@ int NGE_Entity::setBorder(int borderWidth, int red, int green, int blue, int alp
 	borderBlue = blue;
 	borderAlpha = alpha;
 
-	for (int i = 0; i != subShapes.size(); i++)
+	if (adjustSubShapes)
 	{
-		subShapes[i]->setBorder(borderWidth, red, green, blue, alpha, adjustSubShapes);
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->setBorder(borderWidth, red, green, blue, alpha, adjustSubShapes);
+		}
 	}
 
 	return 0;
@@ -171,9 +180,12 @@ int NGE_Entity::render(bool applyToSubShapes)
 		NGE_AdjustAxis(centerX + (width / 2) + ((borderWidth + 1) / 2), -centerY, -rotation);
 	}
 
-	for (int i = 0; i != subShapes.size(); i++)
+	if (applyToSubShapes)
 	{
-		subShapes[i]->render(applyToSubShapes);
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->render(applyToSubShapes);
+		}
 	}
 
 	//Reverse axis adjustment
@@ -187,9 +199,12 @@ int NGE_Entity::setWidth(int width, bool adjustSubShapes)
 	width = width;
 	changeInPosition = true;
 
-	for (int i = 0; i != subShapes.size(); i++)
+	if (adjustSubShapes)
 	{
-		subShapes[i]->setWidth(width, adjustSubShapes);
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->setWidth(width, adjustSubShapes);
+		}
 	}
 
 	return 0;
@@ -205,9 +220,12 @@ int NGE_Entity::setHeight(int height, bool adjustSubShapes)
 	height = height;
 	changeInPosition = true;
 
-	for (int i = 0; i != subShapes.size(); i++)
+	if (adjustSubShapes)
 	{
-		subShapes[i]->setHeight(height, adjustSubShapes);
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->setHeight(height, adjustSubShapes);
+		}
 	}
 
 	return 0;
@@ -223,9 +241,12 @@ int NGE_Entity::setSides(int width, int height, bool adjustSubShapes)
 	setHeight(height, adjustSubShapes);
 	setWidth(width, adjustSubShapes);
 
-	for (int i = 0; i != subShapes.size(); i++)
+	if (adjustSubShapes)
 	{
-		subShapes[i]->setSides(width, height, adjustSubShapes);
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->setSides(width, height, adjustSubShapes);
+		}
 	}
 
 	return 0;
@@ -236,10 +257,14 @@ int NGE_Entity::adjustWidth(int amount, bool adjustSubShapes)
 	changeInPosition = true;
 	width = amount;
 
-	for (int i = 0; i != subShapes.size(); i++)
+	if (adjustSubShapes)
 	{
-		subShapes[i]->adjustWidth(amount, adjustSubShapes);
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->adjustWidth(amount, adjustSubShapes);
+		}
 	}
+
 	return 0;
 }
 
@@ -248,9 +273,12 @@ int NGE_Entity::adjustHeight(int amount, bool adjustSubShapes)
 	changeInPosition = true;
 	height = amount;
 
-	for (int i = 0; i != subShapes.size(); i++)
+	if (adjustSubShapes)
 	{
-		subShapes[i]->adjustHeight(amount, adjustSubShapes);
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->adjustHeight(amount, adjustSubShapes);
+		}
 	}
 
 	return 0;
@@ -261,9 +289,12 @@ int NGE_Entity::setCenterX(int centerX, bool adjustSubShapes)
 	changeInPosition = true;
 	centerX = centerX;
 
-	for (int i = 0; i != subShapes.size(); i++)
+	if (adjustSubShapes)
 	{
-		subShapes[i]->setCenterX(centerX, adjustSubShapes);
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->setCenterX(centerX, adjustSubShapes);
+		}
 	}
 
 	return 0;
@@ -279,9 +310,12 @@ int NGE_Entity::setCenterY(int centerY, bool adjustSubShapes)
 	changeInPosition = true;
 	centerY = centerY;
 
-	for (int i = 0; i != subShapes.size(); i++)
+	if (adjustSubShapes)
 	{
-		subShapes[i]->setCenterY(centerY, adjustSubShapes);
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->setCenterY(centerY, adjustSubShapes);
+		}
 	}
 
 	return 0;
@@ -297,9 +331,12 @@ int NGE_Entity::setCenter(int centerX, int centerY, bool adjustSubShapes)
 	setCenterX(centerX, adjustSubShapes);
 	setCenterY(centerY, adjustSubShapes);
 
-	for (int i = 0; i != subShapes.size(); i++)
+	if (adjustSubShapes)
 	{
-		subShapes[i]->setCenter(centerX, centerY, adjustSubShapes);
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->setCenter(centerX, centerY, adjustSubShapes);
+		}
 	}
 
 	return 0;
@@ -327,9 +364,12 @@ int NGE_Entity::translate(Direction direction, int amount, bool adjustSubShapes)
 		centerY += amount;
 	}
 
-	for (int i = 0; i != subShapes.size(); i++)
+	if (adjustSubShapes)
 	{
-		subShapes[i]->translate(direction, amount, adjustSubShapes);
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->translate(direction, amount, adjustSubShapes);
+		}
 	}
 
 	return 0;
@@ -343,9 +383,12 @@ int NGE_Entity::setRotation(int rotation, bool adjustSubShapes)
 	//Mod by 360 to ensure value is always between 0-359
 	rotation %= 360;
 
-	for (int i = 0; i != subShapes.size(); i++)
+	if (adjustSubShapes)
 	{
-		subShapes[i]->setRotation(rotation, adjustSubShapes);
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->setRotation(rotation, adjustSubShapes);
+		}
 	}
 
 	return 0;
@@ -364,9 +407,12 @@ int NGE_Entity::rotate(int amount, bool adjustSubShapes)
 	//Mod by 360 to ensure value is always between 0-359
 	rotation %= 360;
 
-	for (int i = 0; i != subShapes.size(); i++)
+	if (adjustSubShapes)
 	{
-		subShapes[i]->rotate(amount, adjustSubShapes);
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->rotate(amount, adjustSubShapes);
+		}
 	}
 
 	return 0;
@@ -380,9 +426,12 @@ int NGE_Entity::setPosition(int centerX, int centerY, int width, int height, int
 	setHeight(height, adjustSubShapes);
 	setWidth(width, adjustSubShapes);
 
-	for (int i = 0; i != subShapes.size(); i++)
+	if (adjustSubShapes)
 	{
-		subShapes[i]->setPosition(centerX, centerY, width, height, rotation, adjustSubShapes);
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->setPosition(centerX, centerY, width, height, rotation, adjustSubShapes);
+		}
 	}
 
 	return 0;
@@ -392,9 +441,12 @@ int NGE_Entity::setFlip(bool flipped, bool adjustSubShapes)
 {
 	flipped = flipped;
 
-	for (int i = 0; i != subShapes.size(); i++)
+	if (adjustSubShapes)
 	{
-		subShapes[i]->setFlip(flipped, adjustSubShapes);
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->setFlip(flipped, adjustSubShapes);
+		}
 	}
 
 	return 0;
@@ -416,9 +468,12 @@ int NGE_Entity::swapFlip(bool adjustSubShapes)
 		flipped = true;
 	}
 
-	for (int i = 0; i != subShapes.size(); i++)
+	if (adjustSubShapes)
 	{
-		subShapes[i]->swapFlip(adjustSubShapes);
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->swapFlip(adjustSubShapes);
+		}
 	}
 
 	return 0;
@@ -587,9 +642,12 @@ bool NGE_Entity::touch(int x, int y, bool includeSubShapes)
 
 	for (int i = 0; i != subShapes.size(); i++)
 	{
-		if (subShapes[i]->touch(x, y, includeSubShapes))
+		if (includeSubShapes)
 		{
-			return true;
+			if (subShapes[i]->touch(x, y, includeSubShapes))
+			{
+				return true;
+			}
 		}
 	}
 
@@ -643,11 +701,14 @@ bool NGE_Entity::staticCollision(NGE_Entity& collider, bool includeSubShapes)
 	}
 	else
 	{
-		for (int i = 0; i != subShapes.size(); i++)
+		if (includeSubShapes)
 		{
-			if (subShapes[i]->staticCollision(collider, includeSubShapes))
+			for (int i = 0; i != subShapes.size(); i++)
 			{
-				return true;
+				if (subShapes[i]->staticCollision(collider, includeSubShapes))
+				{
+					return true;
+				}
 			}
 		}
 
