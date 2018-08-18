@@ -42,7 +42,7 @@ int NGE_File::openFile(string file)
 		ifstream reader(filename);
 		string line = "";
 		string currentItem = "";
-		unsigned int i = 0, j = 0, k = 0;
+		int i = 0, j = 0, k = 0;
 
 		//Loop through and load each line of the file
 		while (getline(reader, line, '\n'))
@@ -50,7 +50,7 @@ int NGE_File::openFile(string file)
 			//Create a new vector for each lines items
 			fileContents.push_back(vector<string>());
 
-			//The limit that which upon reaching e dont need to check any more characters in the line
+			//The limit that which upon reaching we dont need to check any more characters in the line
 			int limit = line.size() - endSeperator.size();
 
 			//Go through each character, ignoring the start and end characters
@@ -78,7 +78,7 @@ int NGE_File::openFile(string file)
 				}
 				else
 				{
-					//If the current character is not part of a seperator ass it to the current item recording
+					//If the current character is not part of a seperator add it to the current item recording
 					currentItem = currentItem + line.at(j);
 				}
 			}

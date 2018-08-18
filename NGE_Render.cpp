@@ -1,14 +1,10 @@
 #include "NGE_Render.h"
 using namespace std;
 
-int NGE_RenderQuad(int centerX, int centerY, int width, int height, int rotation, int red, int green, int blue, int alpha)
+int NGE_RenderQuad(int width, int height, int red, int green, int blue, int alpha)
 {
 	//Disable textures while we render the plain quad
 	glDisable(GL_TEXTURE_2D);
-
-	//Translate and rotate openGL model matrix 
-	glTranslatef(centerX, centerY, 0);
-	glRotatef(rotation, 0, 0, 1);
 
 	//Set the color so it will be used when rendering GL_QUADS
 	glColor4f(1.0f*(red / 1.0 / 255), 1.0f*(green / 1.0 / 255), 1.0f*(blue / 1.0 / 255), 1.0f*(alpha / 1.0 / 255));
@@ -26,25 +22,25 @@ int NGE_RenderQuad(int centerX, int centerY, int width, int height, int rotation
 	//Clear the color
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-	//Reverse the model matrix translation and rotation
-	glRotatef(-rotation, 0, 0, 1);
-	glTranslatef(-centerX, -centerY, 0);
-
 	//Re-enable textures
 	glEnable(GL_TEXTURE_2D);
 
 	return 0;
 }
 
-int NGE_RenderTexture(GLuint texture, int centerX, int centerY, int width, int height, int rotation, bool flipTexture)
+int NGE_AdjustAxis(int centerX, int centerY, int rotation)
+{
+	//Translate and rotate openGL model matrix 
+	glTranslatef(centerX, centerY, 0);
+	glRotatef(rotation, 0, 0, 1);
+	return 0;
+}
+
+int NGE_RenderTexture(GLuint texture, int width, int height, bool flipTexture)
 {
 	//Confirm that a texture was sent
 	if (texture != NULL)
 	{
-		//Translate and rotate openGL model matrix 
-		glTranslatef(centerX, centerY, 0);
-		glRotatef(rotation, 0, 0, 1);
-
 		//Bind the texture so it will be rendered when using GL_QUADS
 		glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -82,9 +78,7 @@ int NGE_RenderTexture(GLuint texture, int centerX, int centerY, int width, int h
 			glEnd();
 		}
 
-		//Reverse the model matrix translation and rotation
-		glRotatef(-rotation, 0, 0, 1);
-		glTranslatef(-centerX, -centerY, 0);
+		return 0;
 	}
 	else
 	{

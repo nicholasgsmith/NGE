@@ -136,28 +136,48 @@ int NGE_Entity::render(bool applyToSubShapes)
 	//If a canvas, a colored background for the entity, is set render it first so it is behind the texture
 	if (canvasAlpha != 0)
 	{
-		NGE_RenderQuad(centerX, centerY, width, height, rotation, canvasRed, canvasGreen, canvasBlue, canvasAlpha);
+		NGE_AdjustAxis(centerX, centerY, rotation);
+		NGE_RenderQuad(width, height, canvasRed, canvasGreen, canvasBlue, canvasAlpha);
+		NGE_AdjustAxis(-centerX, -centerY, -rotation);
 	}
 
 	//Render the texture
-	if (!NGE_RenderTexture(texture, centerX, centerY, width, height, rotation, flipped) == 0)
+	//Only revser the axis change before exiting the method so that subshapes are also effected by it
+	NGE_AdjustAxis(centerX, centerY, rotation);
+	int result = NGE_RenderTexture(texture, width, height, flipped);
+	if (result == 0)
 	{
+		NGE_AdjustAxis(-centerX, -centerY, -rotation);
 		return -1;
 	}
 
 	//If a border was set render it as 4 rectangles around the entity
 	if (borderWidth != 0)
 	{
-		NGE_RenderQuad(centerX, centerY - (height / 2) - ((borderWidth + 1) / 2), width + (2 * borderWidth), rotation, borderWidth, borderRed, borderGreen, borderBlue, borderAlpha);
-		NGE_RenderQuad(centerX, centerY + (height / 2) + ((borderWidth + 1) / 2), width + (2 * borderWidth), rotation, borderWidth, borderRed, borderGreen, borderBlue, borderAlpha);
-		NGE_RenderQuad(centerX - (width / 2) - ((borderWidth + 1) / 2), centerY, borderWidth, height + (2 * borderWidth), rotation, borderRed, borderGreen, borderBlue, borderAlpha);
-		NGE_RenderQuad(centerX + (width / 2) + ((borderWidth + 1) / 2), centerY, borderWidth, height + (2 * borderWidth), rotation, borderRed, borderGreen, borderBlue, borderAlpha);
+		NGE_AdjustAxis(centerX, centerY - (height / 2) - ((borderWidth + 1) / 2), rotation);
+		NGE_RenderQuad(width + (2 * borderWidth), borderWidth, borderRed, borderGreen, borderBlue, borderAlpha);
+		NGE_AdjustAxis(-centerX, -(centerY - (height / 2) - ((borderWidth + 1) / 2)), -rotation);
+
+		NGE_AdjustAxis(centerX, centerY + (height / 2) + ((borderWidth + 1) / 2), rotation);
+		NGE_RenderQuad(width + (2 * borderWidth), borderWidth, borderRed, borderGreen, borderBlue, borderAlpha);
+		NGE_AdjustAxis(-centerX, -(centerY + (height / 2) + ((borderWidth + 1) / 2)), -rotation);
+
+		NGE_AdjustAxis(centerX - (width / 2) - ((borderWidth + 1) / 2), centerY, rotation);
+		NGE_RenderQuad(borderWidth, height + (2 * borderWidth), borderRed, borderGreen, borderBlue, borderAlpha);
+		NGE_AdjustAxis(centerX - (width / 2) - ((borderWidth + 1) / 2), -centerY, -rotation);
+
+		NGE_AdjustAxis(centerX + (width / 2) + ((borderWidth + 1) / 2), centerY, rotation);
+		NGE_RenderQuad(borderWidth, height + (2 * borderWidth), borderRed, borderGreen, borderBlue, borderAlpha);
+		NGE_AdjustAxis(centerX + (width / 2) + ((borderWidth + 1) / 2), -centerY, -rotation);
 	}
 
 	for (int i = 0; i != subShapes.size(); i++)
 	{
 		subShapes[i]->render(applyToSubShapes);
 	}
+
+	//Reverse axis adjustment
+	NGE_AdjustAxis(-centerX, -centerY, -rotation);
 
 	return 0;
 }
