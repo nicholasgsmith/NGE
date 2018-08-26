@@ -10,6 +10,7 @@ using namespace std;
 
 enum class Side { width, height };
 enum class Direction { left, right, up, down };
+enum class PerformMovement { none, to_collision, full };
 
 class NGE_Entity
 {
@@ -24,6 +25,8 @@ protected:
 	GLuint texture;
 	int canvasAlpha, canvasBlue, canvasGreen, canvasRed;
 	int borderRed, borderGreen, borderBlue, borderAlpha, borderWidth;
+
+	double rightVelocity, downVelocity, excessDown, excessRight, rightAcceleration, downAcceleration;
 
 public:
 
@@ -133,6 +136,50 @@ public:
 	//Returns true if the entity given is touching the host entity, false otherwise
 	//This only returns true if the entites are strictly touching, on the edge of touching ,e.g. one entites corner is on the others side, is not accepted
 	bool staticCollision(NGE_Entity& collider, bool includeHostSubShapes, bool includeColliderSubShapes);
+
+	//Sets the velocity of the entity in the x-axis (right is positive)
+	int setVelocityX(double velocity);
+
+	//Gets the velocity of the entity in the x-axis (right is positive)
+	double getVelocityX();
+
+	//Sets the velocity of the entity in the y-axis (down is positive)
+	int setVelocityY(double velocity);
+
+	//Gets the velocity of the entity in the y-axis (down is positive)
+	double getVelocityY();
+
+	//Sets the acceleration of the entity in the x-axis (right is positive)
+	int setAccelerationX(float acceleration);
+
+	//Gets the acceleration of the entity in the x-axis (right is positive)
+	double getAccelerationX();
+
+	//Sets the acceleration of the entity in the y-axis (down is positive)
+	int setAccelerationY(float acceleration);
+
+	//Gets the acceleration of the entity in the y-axis (down is positive)
+	double getAccelerationY();
+
+	//Calculates the X and Y velocities based off a resultant velocity in a provided direction (up is 0 degrees)
+	int setVelocity(int bearing, double velocity);
+
+	//Calculates the X and Y accelerations based off a resultant acceleration in a provided direction (up is 0 degrees)
+	int setAcceleration(int bearing, double acceleration);
+
+	//Given the amount of passed time (in milliseconds) calculates and updates the entities position and velocity given its velocity and acceleration
+	int calculateMovement(int timePassed);
+
+	//Given a linear line and an amount of time that has passed, calculates whether or not the entity will collide with the line
+	//timeLeft is set to however much of timePassed has not passed yet after a collision occurs. Is equal time passed if they were already colliding, and 0 if no collision happens, or only right at the end of the time
+	//Note that timeLeft is the time left after a collision occurs, regardless of wheteher you actually moved the entity or rebounded it with the movement parameter.
+	//movement sets how the entity will be adjusted in the event of a collsion. When set of none, this function does not change the entity, it just predicts if a collision will happened. 
+	//If movement is set to to_collison, the entity will be moved frward in time and updated until the collsion, and then stopped. full moved the entity forward to the line, and then rebounds it off, recalculting its movement angle and moving it forward with any time left. Does not effect acceleration.
+	//Two co-ordinates of the line are provided, which are used to calculate the equation of the line
+	//If a collision occurs in in the provided timeframe, the velocity of the entity is multiplied by velocityMultipler
+	//Returns true if a collision happens in the given timeframe
+	bool calculateLineCollision(int timePassed, int& timeLeft, PerformMovement movement, bool changeAccelerationAngle, int xCoordinateOne, int yCoordinateOne, int xCoordinateTwo, int yCoordinateTwo, double velocityMultiplier);
+
 };
 
 #endif
