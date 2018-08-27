@@ -830,6 +830,8 @@ int NGE_Entity::setAcceleration(int bearing, double acceleration, bool adjustSub
 
 int NGE_Entity::calculateMovement(int timePassed, bool moveSubShapes)
 {
+	changeInPosition = true;
+
 	float timePassedSeconds = timePassed / 1000.0;
 	float amountToMove = (timePassedSeconds*rightVelocity) + (pow(timePassedSeconds, 2)*0.5*rightAcceleration) + excessRight;
 	rightVelocity += rightAcceleration*timePassedSeconds;
