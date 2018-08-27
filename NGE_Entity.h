@@ -138,34 +138,34 @@ public:
 	bool staticCollision(NGE_Entity& collider, bool includeHostSubShapes, bool includeColliderSubShapes);
 
 	//Sets the velocity of the entity in the x-axis (right is positive)
-	int setVelocityX(double velocity);
+	int setVelocityX(double velocity, bool adjustSubShapes);
 
 	//Gets the velocity of the entity in the x-axis (right is positive)
 	double getVelocityX();
 
 	//Sets the velocity of the entity in the y-axis (down is positive)
-	int setVelocityY(double velocity);
+	int setVelocityY(double velocity, bool adjustSubShapes);
 
 	//Gets the velocity of the entity in the y-axis (down is positive)
 	double getVelocityY();
 
 	//Sets the acceleration of the entity in the x-axis (right is positive)
-	int setAccelerationX(double acceleration);
+	int setAccelerationX(double acceleration, bool adjustSubShapes);
 
 	//Gets the acceleration of the entity in the x-axis (right is positive)
 	double getAccelerationX();
 
 	//Sets the acceleration of the entity in the y-axis (down is positive)
-	int setAccelerationY(double acceleration);
+	int setAccelerationY(double acceleration, bool adjustSubShapes);
 
 	//Gets the acceleration of the entity in the y-axis (down is positive)
 	double getAccelerationY();
 
 	//Calculates the X and Y velocities based off a resultant velocity in a provided direction (up is 0 degrees)
-	int setVelocity(int bearing, double velocity);
+	int setVelocity(int bearing, double velocity, bool adjustSubShapes);
 
 	//Calculates the X and Y accelerations based off a resultant acceleration in a provided direction (up is 0 degrees)
-	int setAcceleration(int bearing, double acceleration);
+	int setAcceleration(int bearing, double acceleration, bool adjustSubShapes);
 
 	//Given the amount of passed time (in milliseconds) calculates and updates the entities position and velocity given its velocity and acceleration
 	int calculateMovement(int timePassed, bool moveSubShapes);

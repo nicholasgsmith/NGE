@@ -716,9 +716,18 @@ bool NGE_Entity::staticCollision(NGE_Entity& collider, bool includeHostSubShapes
 	}
 }
 
-int NGE_Entity::setVelocityX(double velocity)
+int NGE_Entity::setVelocityX(double velocity, bool adjustSubShapes)
 {
 	rightVelocity = velocity;
+
+	if (adjustSubShapes)
+	{
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->setVelocityX(velocity, adjustSubShapes);
+		}
+	}
+
 	return 0;
 }
 
@@ -727,9 +736,18 @@ double NGE_Entity::getVelocityX()
 	return rightVelocity;
 }
 
-int NGE_Entity::setVelocityY(double velocity)
+int NGE_Entity::setVelocityY(double velocity, bool adjustSubShapes)
 {
 	downVelocity = velocity;
+
+	if (adjustSubShapes)
+	{
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->setVelocityY(velocity, adjustSubShapes);
+		}
+	}
+
 	return 0;
 }
 
@@ -738,9 +756,18 @@ double NGE_Entity::getVelocityY()
 	return downVelocity;
 }
 
-int NGE_Entity::setAccelerationX(double acceleration)
+int NGE_Entity::setAccelerationX(double acceleration, bool adjustSubShapes)
 {
 	rightAcceleration = acceleration;
+
+	if (adjustSubShapes)
+	{
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->setAccelerationX(acceleration, adjustSubShapes);
+		}
+	}
+
 	return 0;
 }
 
@@ -749,9 +776,18 @@ double NGE_Entity::getAccelerationX()
 	return rightAcceleration;
 }
 
-int NGE_Entity::setAccelerationY(double acceleration)
+int NGE_Entity::setAccelerationY(double acceleration, bool adjustSubShapes)
 {
 	downAcceleration = acceleration;
+
+	if (adjustSubShapes)
+	{
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->setAccelerationY(acceleration, adjustSubShapes);
+		}
+	}
+
 	return 0;
 }
 
@@ -760,17 +796,35 @@ double NGE_Entity::getAccelerationY()
 	return downAcceleration;
 }
 
-int NGE_Entity::setVelocity(int bearing, double velocity)
+int NGE_Entity::setVelocity(int bearing, double velocity, bool adjustSubShapes)
 {
 	rightVelocity = NGE_CalcualteRightValue(bearing, velocity);
 	downVelocity = NGE_CalcualteDownValue(bearing, velocity);
+
+	if (adjustSubShapes)
+	{
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->setVelocity(bearing, velocity, adjustSubShapes);
+		}
+	}
+
 	return 0;
 }
 
-int NGE_Entity::setAcceleration(int bearing, double acceleration)
+int NGE_Entity::setAcceleration(int bearing, double acceleration, bool adjustSubShapes)
 {
 	rightAcceleration = NGE_CalcualteRightValue(bearing, acceleration);
 	downAcceleration = NGE_CalcualteDownValue(bearing, acceleration);
+
+	if (adjustSubShapes)
+	{
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->setAcceleration(bearing, acceleration, adjustSubShapes);
+		}
+	}
+
 	return 0;
 }
 
