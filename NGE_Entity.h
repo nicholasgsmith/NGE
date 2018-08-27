@@ -150,13 +150,13 @@ public:
 	double getVelocityY();
 
 	//Sets the acceleration of the entity in the x-axis (right is positive)
-	int setAccelerationX(float acceleration);
+	int setAccelerationX(double acceleration);
 
 	//Gets the acceleration of the entity in the x-axis (right is positive)
 	double getAccelerationX();
 
 	//Sets the acceleration of the entity in the y-axis (down is positive)
-	int setAccelerationY(float acceleration);
+	int setAccelerationY(double acceleration);
 
 	//Gets the acceleration of the entity in the y-axis (down is positive)
 	double getAccelerationY();

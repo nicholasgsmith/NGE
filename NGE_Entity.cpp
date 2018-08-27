@@ -715,3 +715,47 @@ bool NGE_Entity::staticCollision(NGE_Entity& collider, bool includeHostSubShapes
 		return false;
 	}
 }
+
+int NGE_Entity::setVelocityX(double velocity)
+{
+	rightVelocity = velocity;
+	return 0;
+}
+
+double NGE_Entity::getVelocityX()
+{
+	return rightVelocity;
+}
+
+int NGE_Entity::setVelocityY(double velocity)
+{
+	downVelocity = velocity;
+	return 0;
+}
+
+double NGE_Entity::getVelocityY()
+{
+	return downVelocity;
+}
+
+int NGE_Entity::setAccelerationX(double acceleration)
+{
+	rightAcceleration = acceleration;
+	return 0;
+}
+
+double NGE_Entity::getAccelerationX()
+{
+	return rightAcceleration;
+}
+
+int NGE_Entity::setAccelerationY(double acceleration)
+{
+	downAcceleration = acceleration;
+	return 0;
+}
+
+double NGE_Entity::getAccelerationY()
+{
+	return downAcceleration;
+}
