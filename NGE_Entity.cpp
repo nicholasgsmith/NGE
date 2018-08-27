@@ -759,3 +759,17 @@ double NGE_Entity::getAccelerationY()
 {
 	return downAcceleration;
 }
+
+int NGE_Entity::setVelocity(int bearing, double velocity)
+{
+	rightVelocity = NGE_CalcualteRightValue(bearing, velocity);
+	downVelocity = NGE_CalcualteDownValue(bearing, velocity);
+	return 0;
+}
+
+int NGE_Entity::setAcceleration(int bearing, double acceleration)
+{
+	rightAcceleration = NGE_CalcualteRightValue(bearing, acceleration);
+	downAcceleration = NGE_CalcualteDownValue(bearing, acceleration);
+	return 0;
+}
