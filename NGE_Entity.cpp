@@ -773,3 +773,28 @@ int NGE_Entity::setAcceleration(int bearing, double acceleration)
 	downAcceleration = NGE_CalcualteDownValue(bearing, acceleration);
 	return 0;
 }
+
+int NGE_Entity::calculateMovement(int timePassed, bool moveSubShapes)
+{
+	float timePassedSeconds = timePassed / 1000.0;
+	float amountToMove = (timePassedSeconds*rightVelocity) + (pow(timePassedSeconds, 2)*0.5*rightAcceleration) + excessRight;
+	rightVelocity += rightAcceleration*timePassedSeconds;
+	excessRight = amountToMove - int(amountToMove);
+	translate(Direction::right, int(amountToMove), false);
+
+	timePassedSeconds = timePassed / 1000.0;
+	amountToMove = (timePassedSeconds*downVelocity) + (pow(timePassedSeconds, 2)*0.5*downAcceleration) + excessDown;
+	downVelocity += downAcceleration*timePassedSeconds;
+	excessDown = amountToMove - int(amountToMove);
+	translate(Direction::down, int(amountToMove), false);
+
+	if (moveSubShapes)
+	{
+		for (int i = 0; i != subShapes.size(); i++)
+		{
+			subShapes[i]->calculateMovement(timePassed, moveSubShapes);
+		}
+	}
+
+	return 0;
+}

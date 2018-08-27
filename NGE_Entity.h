@@ -168,7 +168,7 @@ public:
 	int setAcceleration(int bearing, double acceleration);
 
 	//Given the amount of passed time (in milliseconds) calculates and updates the entities position and velocity given its velocity and acceleration
-	int calculateMovement(int timePassed);
+	int calculateMovement(int timePassed, bool moveSubShapes);
 
 	//Given a linear line and an amount of time that has passed, calculates whether or not the entity will collide with the line
 	//timeLeft is set to however much of timePassed has not passed yet after a collision occurs. Is equal time passed if they were already colliding, and 0 if no collision happens, or only right at the end of the time
